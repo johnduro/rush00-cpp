@@ -6,7 +6,7 @@
 //   By: mdrissi <mdrissi@student.42.fr>            +#+  +:+       +#+        //
 //                                                +#+#+#+#+#+   +#+           //
 //   Created: 2015/01/10 20:03:57 by mdrissi           #+#    #+#             //
-//   Updated: 2015/01/10 21:00:28 by mdrissi          ###   ########.fr       //
+//   Updated: 2015/01/10 23:08:18 by mdrissi          ###   ########.fr       //
 //                                                                            //
 // ************************************************************************** //
 
@@ -45,4 +45,17 @@ int		Ennemy::get_id() const
 void	Ennemy::set_id(int const id)
 {
 	this->_id = id;
+}
+
+Ennemy & Ennemy::operator=(Ennemy const & rf)
+{
+	if (this != &rf)
+	{
+		this->_alive = rf.getAlive();
+		this->_pos = rf.get_postion();
+		this->_c = rf.get_c();
+		this->_type = rf.get_type();
+		this->_id = rf.get_id();
+	}
+	return (*this);
 }

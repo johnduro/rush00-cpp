@@ -6,7 +6,7 @@
 //   By: mle-roy <mle-roy@student.42.fr>            +#+  +:+       +#+        //
 //                                                +#+#+#+#+#+   +#+           //
 //   Created: 2015/01/10 16:05:28 by mle-roy           #+#    #+#             //
-//   Updated: 2015/01/10 22:27:43 by mdrissi          ###   ########.fr       //
+//   Updated: 2015/01/10 22:40:15 by mdrissi          ###   ########.fr       //
 //                                                                            //
 // ************************************************************************** //
 
@@ -28,11 +28,11 @@ public:
 	~GameEntity( void );
 
 	coord	get_position( void ) const;
-	bool	get_alive( void ) const;
+	bool	getAlive( void ) const;
 	char	get_c( void ) const;
 	int		get_type( void ) const;
 
-	void	set_alive(bool const alive);
+	void	setAlive(bool const alive);
 	void	set_position(coord const x);
 	void	set_c(char const c);
 	void	set_type(int const type);

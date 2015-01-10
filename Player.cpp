@@ -6,7 +6,7 @@
 //   By: mdrissi <mdrissi@student.42.fr>            +#+  +:+       +#+        //
 //                                                +#+#+#+#+#+   +#+           //
 //   Created: 2015/01/10 19:02:19 by mdrissi           #+#    #+#             //
-//   Updated: 2015/01/10 20:02:34 by mdrissi          ###   ########.fr       //
+//   Updated: 2015/01/10 23:02:35 by mdrissi          ###   ########.fr       //
 //                                                                            //
 // ************************************************************************** //
 
@@ -69,7 +69,7 @@ Player & Player::operator=(Player const & rf)
 {
 	if (this ! & rf)
 	{
-		this->_alive = rf.get_alive();
+		this->_alive = rf.getAlive();
 		this->_nb_life = rf.getlife();
 		this->_name = rf.getname();
 		this->_score = rf.getscore();

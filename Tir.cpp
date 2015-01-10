@@ -6,7 +6,7 @@
 //   By: mdrissi <mdrissi@student.42.fr>            +#+  +:+       +#+        //
 //                                                +#+#+#+#+#+   +#+           //
 //   Created: 2015/01/10 18:47:49 by mdrissi           #+#    #+#             //
-//   Updated: 2015/01/10 20:58:07 by mdrissi          ###   ########.fr       //
+//   Updated: 2015/01/10 23:02:12 by mdrissi          ###   ########.fr       //
 //                                                                            //
 // ************************************************************************** //
 
@@ -64,8 +64,8 @@ Tir &	Tir::operator=(Tir const & rf)
 		this->_type = rf.get_type();
 		this->_typetir = rf.get_typetir();
 		this->_dir = rf.get_dir();
-		this->_alive = rf.getalive();
-		this->_c = rf.getalive();
+		this->_alive = rf.getAlive();
+		this->_c = rf.get_c();
 	}
 	return (*this);
 }
