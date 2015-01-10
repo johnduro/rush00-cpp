@@ -6,7 +6,7 @@
 //   By: mle-roy <mle-roy@student.42.fr>            +#+  +:+       +#+        //
 //                                                +#+#+#+#+#+   +#+           //
 //   Created: 2015/01/10 16:05:24 by mle-roy           #+#    #+#             //
-//   Updated: 2015/01/10 18:13:46 by mle-roy          ###   ########.fr       //
+//   Updated: 2015/01/10 22:48:42 by mle-roy          ###   ########.fr       //
 //                                                                            //
 // ************************************************************************** //
 
@@ -19,6 +19,7 @@
 typedef struct			s_entity
 {
 	gameEntity*			entity;
+	int					owner;
 	struct s_entity		*next;
 	struct s_entity		*prev;
 }						t_entity;
@@ -47,9 +48,19 @@ private :
 
 	// ** PRIVATE FUNCTION ** //
 	void				_refresh( void );
-	void				_drawBorders(WINDOW *screen);
+	void				_drawBorders( WINDOW *screen );
 	void				_deleteAllEntities( void );
-	void				_addEntity(gameEntity* newEntity);
+	void				_addEntity( gameEntity* newEntity, int owner );
+	void				_removeEntity( t_entity *ptr);
+	int					_treatInput( int input );
+	void				_addShoot( coord coord, int direction, int owner );
+	int					_makeGame( void );
+	void				_printScreenField( void );
+	void				_printScreenScore( void );
+	void				_generateEnemy( void );
+	// void				_scrollDown( void );
+	int					_checkForDead( void );
+	void				_playLoop( void );
 
 public :
 	// ** CANONICAL ** //

@@ -6,11 +6,12 @@
 //   By: mle-roy <mle-roy@student.42.fr>            +#+  +:+       +#+        //
 //                                                +#+#+#+#+#+   +#+           //
 //   Created: 2015/01/10 16:05:31 by mle-roy           #+#    #+#             //
-//   Updated: 2015/01/10 18:16:27 by mle-roy          ###   ########.fr       //
+//   Updated: 2015/01/10 22:51:08 by mle-roy          ###   ########.fr       //
 //                                                                            //
 // ************************************************************************** //
 
 #include "gameManager.class.hpp"
+#include "defines.hpp"
 
 //refresh() --> raffraichi l ecran
 //int move(int y, int x); --> bouge le curseur
@@ -28,20 +29,32 @@ gameManager::gameManager( void )
 
 gameManager::gameManager( gameManager const & src )
 {
-	//A FAIRE !!!!!!!
+	this->_isInit = false;
+	this->_entities = src.cloneEntities();//a faire
+	this->_player = src.clonePlayer();
+	this->_maxY = src.getMaxY();
+	this->_maxX = src.getMaxX();
+	this->_field = src.getField();
+	this->_score = src.getScore();
 }
 
 gameManager::~gameManager( void )
 {
 	if (this->isInit)
-		endwin(); //fin ncurses
+		endwin();
 	delete this->_player;
 	this->_deleteAllEntities();
 }
 
 gameManager &			gameManager::operator=( gameManager const & src )
 {
-	//A FAIRE !!!!!!!
+	this->_entities = src.cloneEntities();//a faire
+	this->_player = src.clonePlayer();
+	this->_maxY = src.getMaxY();
+	this->_maxX = src.getMaxX();
+	this->_field = src.getField();
+	this->_score = src.getScore();
+	return (*this);
 }
 
 // ** PRIVATE FUNCTION ** //
@@ -93,16 +106,188 @@ void					gameManager::_deleteAllEntities( void )
 	delete this->_entities;
 }
 
-void					gameManager::_addEntity(gameEntity* newEntity)
+void					gameManager::_addEntity(gameEntity* newEntity, int owner)
 {
 	t_entity		*node = new t_entity;
 
 	node->entity = newEntity;
+	node->owner = owner;
 	node->next = NULL;
 	node->prev = NULL;
 	node->prev = this->_entities->end;
 	this->_entities->end->next = node;
 }
+
+
+void					gameManager::_removeEntity(t_entity *ptr)
+{
+	if (ptr->next && ptr->prev)
+	{
+		ptr->prev->next = ptr->next;
+		ptr->next->prev = ptr->prev;
+	}
+	else if (ptr->next && ptr->prev == NULL)
+	{
+		ptr->next->prev = NULL;
+		this->_entities->start = ptr->next;
+	}
+	else if (ptr->prev && ptr->next == NULL)
+	{
+		ptr->prev->next = NULL;
+		this->_entities->end = ptr->prev;
+	}
+	delete ptr;
+}
+
+int						gameManager::_treatInput( int input )
+{
+	coord		coord;
+
+	if (input == UP || input == DOWN || input == LEFT || input == RIGHT)
+		this->_player->move(input, this->_maxY, this->_maxX);
+	else if (input == SPACE)
+		this->_addShoot(this->_player->getCoord(), UP, this->_player->getTir(), PLAYER);
+	else if (input == ESC)
+		return (1);
+	return (0);
+}
+
+void				gameManager::_addShoot( coord coord, int direction, char print, int owner )
+{
+	Tir		*fire = new Tir(coord, direction, print);
+
+	this->_addEntity(fire, owner);
+}
+
+int				gameManager::_makeGame( void );
+{
+//	this->_scrollDown();//??
+	this->_playLoop();
+	if (this->checkForDead())
+		return (1);
+	this->_generateEnemy();//a faire
+	return (0);
+}
+
+void				gameManager::_printScreenField( void )
+{
+//mvwprintw(screen, y - 1, x - 1, "+");
+	// attron(COLOR_PAIR(1));
+	// attroff(COLOR_PAIR(1));
+	t_entity		*ptr;
+	coord			coord;
+	int				colorPair;
+	int				type;
+
+	ptr = this->_entities->start;
+	this->_drawBorders(this->_field);
+	this->_drawBorders(this->_score);
+	coord = this->_player->getCoord();
+	attron(COLOR_PAIR(YELLOW));
+	mvwprintw(this->_field, coord.y, coord.x, this->_player->getChar());
+	attroff(COLOR_PAIR(YELLOW));
+	while (ptr)
+	{
+		type = ptr->entity->getType();
+		coord = ptr->entity->getCoord();
+		if (type == TIR)
+		{
+			if (ptr->owner == COMPUTER)
+				colorPair = RED;
+			else
+				colorPair = MAGENTA;
+		}
+		else if (type == ENEMY || type == OBSTACLE)
+			colorPair = WHITE;
+		attron(COLOR_PAIR(pair));
+ 		mvwprintw(this->_field, coord.y, coord.x, ptr->entity->getChar());
+		attroff(COLOR_PAIR(pair));
+		ptr = ptr->next;
+	}
+}
+
+void				gameManager::_printScreenScore( void )
+{
+	mvwprintw(this->_score, 1, 1, this->_player->getScore());
+}
+
+void				gameManager::_generateEnemy( void )
+{
+//a faire
+}
+
+// void				gameManager::_scrollDown( void )
+// {
+// 	t_entity		*ptr;
+
+// 	ptr = this->_entities->start;
+// 	while (ptr)
+// 	{
+// 		if (ptr->owner == COMPUTER)
+// 			ptr->entity->move(DOWN, this->_maxY, this->_maxX);
+// 		ptr = ptr->next;
+// 	}
+// }
+
+int					gameManager::_checkForDead( void )
+{
+	t_entity		*ptr;
+	t_entity		*keep;
+	t_entity		*other;
+	coord			coord;
+
+	ptr = this->_entities->start;
+	while (ptr)
+	{
+		keep = ptr->next;
+		if (!ptr->entity->getAlive())
+		{
+			this->_removeEntity(ptr);
+			ptr = keep;
+			continue ;
+		}
+		other = this->_entities->start;
+		coord = ptr->entity->getCoord();
+		while (other)
+		{
+			if (ptr != other)
+			{
+				if (other->entity->isHurt(coord))
+				{
+					if (other == keep)
+						keep = other->next;
+					this->_removeEntity(ptr);
+					this->_removeEntity(other);
+					break ;
+				}
+			}
+		}
+		ptr = keep;
+	}
+	ptr = this->_entities->start;
+	coord = this->_player->getCoord();
+	while (ptr)
+	{
+		if (ptr->entity->isHurt(coord))
+			return (1);
+	}
+	return (0);
+}
+
+void					gameManager::_playLoop( void )
+{
+	t_entity			*ptr;
+
+	ptr = this->_entities->start;
+	while (ptr)
+	{
+		if (ptr->entity->play())
+			this->_addShoot(ptr->entity->getCoord(), ptr->entity->getDirection(), COMPUTER);
+		ptr = ptr->next;
+	}
+}
+
+
 
 // ** PUBLIC FUNCTION **//
 void					gameManager::init( void )
@@ -115,6 +300,11 @@ void					gameManager::init( void )
 	keypad(stdscr, TRUE);
 	curs_set(0);
 	timeout(0);
+	start_color();
+	init_pair(WHITE, COLOR_WHITE, COLOR_BLACK);
+	init_pair(RED, COLOR_RED, COLOR_BLACK);
+	init_pair(YELLOW, COLOR_YELLOW, COLOR_BLACK);
+	init_pair(MAGENTA, COLOR_MAGENTA, COLOR_BLACK);
 	getmaxyx(stdscr, this->_maxY, this->_maxX);
 	this->_field = newwin(this->_maxY - this->_scoreSize, this->_maxX, 0, 0);
 	this->_score = newwin(this->_scoreSize, this->_maxX, this->_maxY - this->_scoreSize, 0);
@@ -126,8 +316,20 @@ void					gameManager::init( void )
 
 void					gameManager::loop( void )
 {
+	int		input;
+
 	while (42)
 	{
-
+		input = getch();
+		if (input >= 0)
+		{
+			if (this->_treatInput(input))
+				return ;
+		}
+		if (this->_makeGame())
+			return ;
+		this->_printScreenField();
+		this->_printScreenScore();
+		this->_refresh();
 	}
 }
