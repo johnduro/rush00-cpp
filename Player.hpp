@@ -6,7 +6,7 @@
 //   By: mdrissi <mdrissi@student.42.fr>            +#+  +:+       +#+        //
 //                                                +#+#+#+#+#+   +#+           //
 //   Created: 2015/01/10 17:32:56 by mdrissi           #+#    #+#             //
-//   Updated: 2015/01/10 19:58:02 by mdrissi          ###   ########.fr       //
+//   Updated: 2015/01/11 00:18:58 by mdrissi          ###   ########.fr       //
 //                                                                            //
 // ************************************************************************** //
 
@@ -21,8 +21,8 @@ class Player : public GameEntity
 public:
 
 	Player( void );
-	Player(t_coord c, std::string name);
-	Player(PLayer const & rf);
+	Player(coord pos, std::string name, int nb_life, char c, int score);
+	Player(Player const & rf);
 	~Player( void );
 
 

@@ -6,7 +6,7 @@
 //   By: mdrissi <mdrissi@student.42.fr>            +#+  +:+       +#+        //
 //                                                +#+#+#+#+#+   +#+           //
 //   Created: 2015/01/10 18:47:49 by mdrissi           #+#    #+#             //
-//   Updated: 2015/01/10 23:02:12 by mdrissi          ###   ########.fr       //
+//   Updated: 2015/01/11 00:28:20 by mdrissi          ###   ########.fr       //
 //                                                                            //
 // ************************************************************************** //
 
@@ -17,13 +17,13 @@ Tir::Tir( void )
 	return ;
 }
 
-Tir::Tir(coord pos, char typetir, int dir) : _pos(pos), _typetir(typetir), _dir(dir),
-											 _alive(1), _c(c), _type(2)
+Tir::Tir(coord pos, int dir, char typetir) : GameEntity(1, pos, 0, 1),
+											 _dir(dir), _typetir(typetir)
 {
 	return ;
 }
 
-Tir::Tir(Tir const & rf)
+Tir::Tir(Tir const & rf) : GameEntity()
 {
 	*this = rf;
 	return ;

@@ -6,24 +6,24 @@
 //   By: mle-roy <mle-roy@student.42.fr>            +#+  +:+       +#+        //
 //                                                +#+#+#+#+#+   +#+           //
 //   Created: 2015/01/10 16:05:34 by mle-roy           #+#    #+#             //
-//   Updated: 2015/01/10 23:10:08 by mdrissi          ###   ########.fr       //
+//   Updated: 2015/01/11 00:13:57 by mdrissi          ###   ########.fr       //
 //                                                                            //
 // ************************************************************************** //
 
-#include "gameEntiy.class.cpp"
+#include "gameEntity.class.hpp"
 
 GameEntity::GameEntity( void )
 {
 	return ;
 }
 
-GameEntity::GameEntity(coord pos, char c, int type) : _alive(alive),
+GameEntity::GameEntity(bool alive, coord pos, char c, int type) : _alive(alive),
 													  _pos(pos), _c(c),
 													  _type(type)
 {
 	return ;
 }
-GameEntity::GameEntity(GmaeEntity const & rf)
+GameEntity::GameEntity(GameEntity const & rf)
 {
 	*this = rf;
 	return ;
@@ -84,7 +84,7 @@ void	GameEntity::move(int dir, int maxY, int maxX)
 {
 	coord	tmp;
 	tmp.x = this->_pos.x;
-	tmp.y = this->pos.y;
+	tmp.y = this->_pos.y;
 
 	if ((dir == 1) && ((tmp.y - 1) >= 0))
 		tmp.y--;
@@ -94,9 +94,9 @@ void	GameEntity::move(int dir, int maxY, int maxX)
 		tmp.x--;
 	else if ((dir == 4) && ((tmp.x + 1) <= maxX))
 		tmp.x++;
-	this.set_position(tmp);
+	this->set_position(tmp);
 }
-	
+
 GameEntity	& GameEntity::operator=(GameEntity const & rf)
 {
 	if (this != &rf)

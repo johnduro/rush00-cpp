@@ -6,7 +6,7 @@
 //   By: mdrissi <mdrissi@student.42.fr>            +#+  +:+       +#+        //
 //                                                +#+#+#+#+#+   +#+           //
 //   Created: 2015/01/10 19:02:19 by mdrissi           #+#    #+#             //
-//   Updated: 2015/01/10 23:02:35 by mdrissi          ###   ########.fr       //
+//   Updated: 2015/01/11 00:20:47 by mdrissi          ###   ########.fr       //
 //                                                                            //
 // ************************************************************************** //
 
@@ -18,18 +18,17 @@ Player::Player()
 	return ;
 }
 
-Player::Player(coord c, std::string name, int nb_life, int type, char c, int score,) : _pos(c), _name(name),
-																					   _nb_life(nb_life),
-																					   _type(type), _c(c), 
-																					   _score(score);
-																		   
+Player::Player(coord pos, std::string name, int nb_life, char c, int score) : GameEntity(1, pos, c, 0),
+																						_score(score), _nb_life(nb_life),
+																						_name(name)
 {
 	return ;
 }
 
-Player::Player(Player const & rf)
+Player::Player(Player const & rf) : GameEntity()
 {
-	*this = rf
+	*this = rf;
+	return ;
 }
 
 // * GEtter / Setter
@@ -53,7 +52,7 @@ std::string	Player::getname( void ) const
 
 void	Player::setname(std::string const name)
 {
-	this->_name = name
+	this->_name = name;
 }
 
 void	Player::setnb_life(int const nb_life)
@@ -67,13 +66,13 @@ void	Player::setscore(int const score)
 
 Player & Player::operator=(Player const & rf)
 {
-	if (this ! & rf)
+	if (this != & rf)
 	{
 		this->_alive = rf.getAlive();
-		this->_nb_life = rf.getlife();
+		this->_nb_life = rf.getnb_life();
 		this->_name = rf.getname();
 		this->_score = rf.getscore();
-		this->_pos = rf.getpos();
+		this->_pos = rf.get_position();
 		this->_c = rf.get_c();
 		this->_type = rf.get_type();
 	}

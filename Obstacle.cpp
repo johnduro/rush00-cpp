@@ -6,24 +6,24 @@
 //   By: mdrissi <mdrissi@student.42.fr>            +#+  +:+       +#+        //
 //                                                +#+#+#+#+#+   +#+           //
 //   Created: 2015/01/10 18:26:15 by mdrissi           #+#    #+#             //
-//   Updated: 2015/01/10 20:49:58 by mdrissi          ###   ########.fr       //
+//   Updated: 2015/01/11 00:08:16 by mdrissi          ###   ########.fr       //
 //                                                                            //
 // ************************************************************************** //
 
 #include "Obstacle.hpp"
+#include "gameEntity.class.hpp"
 
 Obstacle::Obstacle(void)
 {
 	return ;
 }
 
-Obstacle::Obstacle(coord pos, char c, int typeob) : _pos(pos), _type(3),
-													_alive(1), _c(c), _typeob(typeob)
+Obstacle::Obstacle(coord pos, char c, int typeob) : GameEntity(1, pos, c, 3), _typeob(typeob)
 {
 	return ;
 }
 
-Obstacle::Obstacle(Obstacle & const rf)
+Obstacle::Obstacle(Obstacle const & rf) : GameEntity()
 {
 	*this = rf;
 	return ;
@@ -36,12 +36,12 @@ Obstacle::~Obstacle( void )
 
 // * Getteur / Setter *//
 
-int		get_typeob( void ) const
+int		Obstacle::get_typeob( void ) const
 {
-	return this->_typeob;
+	return (this->_typeob);
 }
 
-void	set_typeob(int const type)
+void	Obstacle::set_typeob(int const type)
 {
 	this->_typeob = type;
 	return ;
@@ -54,8 +54,8 @@ Obstacle & Obstacle::operator=(Obstacle const & rf)
 	if (this != &rf)
 	{
 		this->_c = rf.get_c();
-		this->_pos = rf.getposition();
-		this->_alive = rf.get_alive();
+		this->_pos = rf.get_position();
+		this->_alive = rf.getAlive();
 		this->_c = rf.get_c();
 		this->_typeob = rf.get_typeob();
 		this->_type = rf.get_type();
