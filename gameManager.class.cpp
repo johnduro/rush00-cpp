@@ -6,16 +6,13 @@
 //   By: mle-roy <mle-roy@student.42.fr>            +#+  +:+       +#+        //
 //                                                +#+#+#+#+#+   +#+           //
 //   Created: 2015/01/10 16:05:31 by mle-roy           #+#    #+#             //
-//   Updated: 2015/01/10 23:49:30 by mle-roy          ###   ########.fr       //
+//   Updated: 2015/01/11 00:19:30 by mle-roy          ###   ########.fr       //
 //                                                                            //
 // ************************************************************************** //
 
+#include <sys/time.h>
 #include "gameManager.class.hpp"
 #include "defines.hpp"
-
-//refresh() --> raffraichi l ecran
-//int move(int y, int x); --> bouge le curseur
-
 
 // ** CANONICAL ** //
 gameManager::gameManager( void )
@@ -30,7 +27,7 @@ gameManager::gameManager( void )
 gameManager::gameManager( gameManager const & src )
 {
 	this->_isInit = false;
-	this->_entities = src.cloneEntities();//a faire
+	this->_entities = src.cloneEntities();
 	this->_player = src.clonePlayer();
 	this->_maxY = src.getMaxY();
 	this->_maxX = src.getMaxX();
@@ -48,7 +45,7 @@ gameManager::~gameManager( void )
 
 gameManager &			gameManager::operator=( gameManager const & src )
 {
-	this->_entities = src.cloneEntities();//a faire
+	this->_entities = src.cloneEntities();
 	this->_player = src.clonePlayer();
 	this->_maxY = src.getMaxY();
 	this->_maxX = src.getMaxX();
@@ -114,8 +111,16 @@ void					gameManager::_addEntity(gameEntity* newEntity, int owner)
 	node->owner = owner;
 	node->next = NULL;
 	node->prev = NULL;
-	node->prev = this->_entities->end;
-	this->_entities->end->next = node;
+	if (this->_entities->start == NULL)
+	{
+		this->_entities->start = node;
+		this->_entities->end = node;
+	}
+	else
+	{
+		node->prev = this->_entities->end;
+		this->_entities->end->next = node;
+	}
 }
 
 
@@ -172,9 +177,6 @@ int				gameManager::_makeGame( void );
 
 void				gameManager::_printScreenField( void )
 {
-//mvwprintw(screen, y - 1, x - 1, "+");
-	// attron(COLOR_PAIR(1));
-	// attroff(COLOR_PAIR(1));
 	t_entity		*ptr;
 	coord			coord;
 	int				colorPair;
@@ -303,6 +305,7 @@ void					gameManager::_playLoop( void )
 	ptr = this->_entities->start;
 	while (ptr)
 	{
+		// check if play ?
 		if (ptr->entity->play())
 			this->_addShoot(ptr->entity->getCoord(), ptr->entity->getDirection(), COMPUTER);
 		ptr = ptr->next;
@@ -337,6 +340,20 @@ bool					gameManager::_isTimeYet(struct timeval ok)
 	else if (time.tv_sec > ok.tv_sec)
 		return (true);
 	return (false);
+}
+
+void				gameManager::_addClonedEntity(t_list *newL, t_entity *newE)
+{
+	if (newL->start == NULL)
+	{
+		newL->start = newE;
+		newL->end = newE;
+	}
+	else
+	{
+		newE->prev = newL->end;
+		newL->end->next = newE;
+	}
 }
 
 
@@ -384,4 +401,50 @@ void					gameManager::loop( void )
 		this->_printScreenScore();
 		this->_refresh();
 	}
+}
+
+t_list*					gameManager::cloneEntities( void )
+{
+	t_list		*newL = new t_list;
+	t_entity	*ptr;
+	t_entity	*newE;
+
+	newL->start = NULL;
+	newL->end = NULL;
+	ptr = this->_entities;
+	while (ptr)
+	{
+		newE = new t_entity;
+		newE->entity = new gameEntity(*(ptr->entity));
+		newE->prev = NULL;
+		newE->next = NULL;
+		this->_addClonedEntity(newL, newE);
+		ptr = ptr->next;
+	}
+	return (newL);
+}
+
+Player*					gameManager::clonePlayer( void )
+{
+	return (new Player(this->_player));
+}
+
+int						gameManager::getMaxY( void )
+{
+	return (this->_maxY);
+}
+
+int						gameManager::getMaxX( void )
+{
+	return (this->_maxX);
+}
+
+WINDOW					gameManager::*getField( void )
+{
+	return (this->_field);
+}
+
+WINDOW					gameManager::*getScore( void )
+{
+	return (this->_score);
 }

@@ -6,7 +6,7 @@
 //   By: mle-roy <mle-roy@student.42.fr>            +#+  +:+       +#+        //
 //                                                +#+#+#+#+#+   +#+           //
 //   Created: 2015/01/10 16:05:24 by mle-roy           #+#    #+#             //
-//   Updated: 2015/01/10 23:45:32 by mle-roy          ###   ########.fr       //
+//   Updated: 2015/01/11 00:12:38 by mle-roy          ###   ########.fr       //
 //                                                                            //
 // ************************************************************************** //
 
@@ -66,6 +66,7 @@ private :
 	void				_playLoop( void );
 	void				_planNextGen( void );
 	bool				_isTimeYet(struct timeval ok);
+	void				_addClonedEntity(t_list *newL, t_entity *newE);
 
 public :
 	// ** CANONICAL ** //
@@ -77,6 +78,12 @@ public :
 	// ** PUBLIC FUNCTION ** //
 	void					init( void );
 	void					loop( void );
+	t_list*					cloneEntities( void );
+	Player*					clonePlayer( void );
+	int						getMaxY( void );
+	int						getMaxX( void );
+	WINDOW					*getField( void );
+	WINDOW					*getScore( void );
 };
 
 #endif // ** GAMEMANAGER_CLASS_HPP ** //
