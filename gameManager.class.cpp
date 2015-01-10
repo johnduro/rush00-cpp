@@ -6,7 +6,7 @@
 //   By: mle-roy <mle-roy@student.42.fr>            +#+  +:+       +#+        //
 //                                                +#+#+#+#+#+   +#+           //
 //   Created: 2015/01/10 16:05:31 by mle-roy           #+#    #+#             //
-//   Updated: 2015/01/10 22:51:08 by mle-roy          ###   ########.fr       //
+//   Updated: 2015/01/10 23:49:30 by mle-roy          ###   ########.fr       //
 //                                                                            //
 // ************************************************************************** //
 
@@ -165,7 +165,8 @@ int				gameManager::_makeGame( void );
 	this->_playLoop();
 	if (this->checkForDead())
 		return (1);
-	this->_generateEnemy();//a faire
+	if (this->_isTimeYet(this->_nextGen))
+		this->_generateEnemy();
 	return (0);
 }
 
@@ -213,7 +214,28 @@ void				gameManager::_printScreenScore( void )
 
 void				gameManager::_generateEnemy( void )
 {
-//a faire
+	int				nbEnemy;
+	int				nbObs;
+	gameEntity*		*newE;
+	coord			coord;
+
+	nbEnemy = rand() % 4;
+	nbObs = rand() % 2;
+	for (i = 0; i < nbEnemy; i++)
+	{
+		coord.y = 1;
+		coord.x = rand() % this->_maxX;;
+		newE = new Ennemy(coord, "Y", 1);
+		this->_addEntity(newE, COMPUTER);
+	}
+	for (i = 0; i < nbObs; i++)
+	{
+		coord.y = 1;
+		coord.x = rand() % this->_maxX;;
+		newE = new Obstacle(coord, "O", 1);
+		this->_addEntity(newE, COMPUTER);
+	}
+	this->_planNextGen();
 }
 
 // void				gameManager::_scrollDown( void )
@@ -287,6 +309,35 @@ void					gameManager::_playLoop( void )
 	}
 }
 
+void					gameManager::_planNextGen( void )
+{
+	struct timeval		cur;
+	struct timeval		add;
+
+	gettimeofday(&cur, NULL);
+	add.tv_sec = RESPAWN_TIME;
+	add.tv_usec = 0;
+	timeradd(&cur, &add, &(this->_nextGen));
+}
+
+bool					gameManager::_isTimeYet(struct timeval ok)
+{
+	struct timeval		time;
+
+	gettimeofday(&time, NULL);
+	if (time.tv_sec < ok.tv_sec)
+		return (false);
+	else if (time.tv_sec == ok.tv_sec)
+	{
+		if (time.tv_usec < ok.tv_usec)
+			return (false);
+		else
+			return (true);
+	}
+	else if (time.tv_sec > ok.tv_sec)
+		return (true);
+	return (false);
+}
 
 
 // ** PUBLIC FUNCTION **//
@@ -318,6 +369,7 @@ void					gameManager::loop( void )
 {
 	int		input;
 
+	this->_planNextGen();
 	while (42)
 	{
 		input = getch();

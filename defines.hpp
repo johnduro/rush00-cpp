@@ -6,7 +6,7 @@
 //   By: mle-roy <mle-roy@student.42.fr>            +#+  +:+       +#+        //
 //                                                +#+#+#+#+#+   +#+           //
 //   Created: 2015/01/10 18:30:03 by mle-roy           #+#    #+#             //
-//   Updated: 2015/01/10 20:24:13 by mle-roy          ###   ########.fr       //
+//   Updated: 2015/01/10 23:44:57 by mle-roy          ###   ########.fr       //
 //                                                                            //
 // ************************************************************************** //
 
@@ -28,5 +28,6 @@
 # define RED 2
 # define YELLOW 3
 # define MAGENTA 4
+# define RESPAWN_TIME 4
 
 #endif // ** DEFINES_HPP ** //

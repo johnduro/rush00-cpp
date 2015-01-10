@@ -6,7 +6,7 @@
 //   By: mle-roy <mle-roy@student.42.fr>            +#+  +:+       +#+        //
 //                                                +#+#+#+#+#+   +#+           //
 //   Created: 2015/01/10 16:05:24 by mle-roy           #+#    #+#             //
-//   Updated: 2015/01/10 22:48:42 by mle-roy          ###   ########.fr       //
+//   Updated: 2015/01/10 23:45:32 by mle-roy          ###   ########.fr       //
 //                                                                            //
 // ************************************************************************** //
 
@@ -14,6 +14,7 @@
 # define GAMEMANAGER_CLASS_HPP
 
 #include <ncurses.h>
+#include <sys/time.h>
 #include "gameEntity.class.hpp"
 
 typedef struct			s_entity
@@ -45,6 +46,8 @@ private :
 	int					_maxX;
 	WINDOW				*_field;
 	WINDOW				*_score;
+	struct timeval		_nextGen;
+//	struct timeval		_nextPrint;
 
 	// ** PRIVATE FUNCTION ** //
 	void				_refresh( void );
@@ -61,6 +64,8 @@ private :
 	// void				_scrollDown( void );
 	int					_checkForDead( void );
 	void				_playLoop( void );
+	void				_planNextGen( void );
+	bool				_isTimeYet(struct timeval ok);
 
 public :
 	// ** CANONICAL ** //
