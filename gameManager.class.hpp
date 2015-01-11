@@ -6,7 +6,7 @@
 //   By: mle-roy <mle-roy@student.42.fr>            +#+  +:+       +#+        //
 //                                                +#+#+#+#+#+   +#+           //
 //   Created: 2015/01/10 16:05:24 by mle-roy           #+#    #+#             //
-//   Updated: 2015/01/11 00:12:38 by mle-roy          ###   ########.fr       //
+//   Updated: 2015/01/11 01:28:10 by mle-roy          ###   ########.fr       //
 //                                                                            //
 // ************************************************************************** //
 
@@ -15,11 +15,16 @@
 
 #include <ncurses.h>
 #include <sys/time.h>
+#include "defines.hpp"
 #include "gameEntity.class.hpp"
+#include "Player.hpp"
+#include "Obstacle.hpp"
+#include "Ennemy.hpp"
+#include "Tir.hpp"
 
 typedef struct			s_entity
 {
-	gameEntity*			entity;
+	GameEntity*			entity;
 	int					owner;
 	struct s_entity		*next;
 	struct s_entity		*prev;
@@ -53,10 +58,10 @@ private :
 	void				_refresh( void );
 	void				_drawBorders( WINDOW *screen );
 	void				_deleteAllEntities( void );
-	void				_addEntity( gameEntity* newEntity, int owner );
+	void				_addEntity( GameEntity* newEntity, int owner );
 	void				_removeEntity( t_entity *ptr);
 	int					_treatInput( int input );
-	void				_addShoot( coord coord, int direction, int owner );
+	void				_addShoot( coord coord, int direction, char print, int owner );
 	int					_makeGame( void );
 	void				_printScreenField( void );
 	void				_printScreenScore( void );
@@ -78,12 +83,12 @@ public :
 	// ** PUBLIC FUNCTION ** //
 	void					init( void );
 	void					loop( void );
-	t_list*					cloneEntities( void );
-	Player*					clonePlayer( void );
-	int						getMaxY( void );
-	int						getMaxX( void );
-	WINDOW					*getField( void );
-	WINDOW					*getScore( void );
+	t_list*					cloneEntities( void ) const ;
+	Player*					clonePlayer( void ) const ;
+	int						getMaxY( void ) const ;
+	int						getMaxX( void ) const ;
+	WINDOW					*getField( void ) const ;
+	WINDOW					*getScore( void ) const ;
 };
 
 #endif // ** GAMEMANAGER_CLASS_HPP ** //

@@ -6,12 +6,17 @@
 //   By: mle-roy <mle-roy@student.42.fr>            +#+  +:+       +#+        //
 //                                                +#+#+#+#+#+   +#+           //
 //   Created: 2015/01/10 18:30:03 by mle-roy           #+#    #+#             //
-//   Updated: 2015/01/11 00:12:48 by mle-roy          ###   ########.fr       //
+//   Updated: 2015/01/11 01:02:48 by mle-roy          ###   ########.fr       //
 //                                                                            //
 // ************************************************************************** //
 
 #ifndef DEFINES_HPP
 # define DEFINES_HPP
+
+struct	coord{
+	int	x;
+	int	y;
+};
 
 # define UP 259
 # define DOWN 258

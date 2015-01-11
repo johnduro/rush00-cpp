@@ -6,28 +6,25 @@
 //   By: mle-roy <mle-roy@student.42.fr>            +#+  +:+       +#+        //
 //                                                +#+#+#+#+#+   +#+           //
 //   Created: 2015/01/10 16:05:28 by mle-roy           #+#    #+#             //
-//   Updated: 2015/01/10 22:40:15 by mdrissi          ###   ########.fr       //
+//   Updated: 2015/01/11 01:17:34 by mle-roy          ###   ########.fr       //
 //                                                                            //
 // ************************************************************************** //
 
 #ifndef GAMEENTITY_CLASS_HPP
 # define GAMEENTITY_CLASS_HPP
 
-struct	coord{
-	int	x;
-	int	y;
-};
+#include "defines.hpp"
 
 class GameEntity
 {
 public:
 
 	GameEntity( void );
-	GameEntity( bool alive, coord pos, char c, int type);
+	GameEntity( bool alive, coord pos, char c, int type, int maxY, int maxX);
 	GameEntity( GameEntity const & entity);
 	~GameEntity( void );
 
-	coord	get_position( void ) const;
+	coord	getCoord( void ) const;
 	bool	getAlive( void ) const;
 	char	get_c( void ) const;
 	int		get_type( void ) const;
@@ -46,6 +43,8 @@ protected:
 	coord		_pos;
 	char		_c;
 	int			_type;
+	int			_maxY;
+	int			_maxX;
 
 };
 

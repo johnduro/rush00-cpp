@@ -6,27 +6,32 @@
 //   By: mdrissi <mdrissi@student.42.fr>            +#+  +:+       +#+        //
 //                                                +#+#+#+#+#+   +#+           //
 //   Created: 2015/01/10 19:02:19 by mdrissi           #+#    #+#             //
-//   Updated: 2015/01/11 00:20:47 by mdrissi          ###   ########.fr       //
+//   Updated: 2015/01/11 01:47:15 by mle-roy          ###   ########.fr       //
 //                                                                            //
 // ************************************************************************** //
 
 #include "Player.hpp"
 #include <string>
+#include <iomanip>
+#include <locale>
+#include <sstream>
 
 Player::Player()
 {
+	this->_tir = '|';
 	return ;
 }
 
-Player::Player(coord pos, std::string name, int nb_life, char c, int score) : GameEntity(1, pos, c, 0),
-																						_score(score), _nb_life(nb_life),
-																						_name(name)
+Player::Player(coord pos, std::string name, int nb_life, char c, int score, int maxY, int maxX)
+	: GameEntity(1, pos, c, 0, maxY, maxX),	_score(score), _nb_life(nb_life),_name(name)
 {
+	this->_tir = '|';
 	return ;
 }
 
 Player::Player(Player const & rf) : GameEntity()
 {
+	this->_tir = '|';
 	*this = rf;
 	return ;
 }
@@ -43,9 +48,22 @@ int		Player::getscore( void ) const
 	return (this->_score);
 }
 
+char*		Player::getScore( void ) const
+{
+	char	*str;
+
+	itoa( this->_score, str, 10);
+	return (str);
+}
+
 std::string	Player::getname( void ) const
 {
 	return (this->_name);
+}
+
+char	Player::getTir( void ) const
+{
+	return (this->_tir);
 }
 
 // SETTER
@@ -72,9 +90,10 @@ Player & Player::operator=(Player const & rf)
 		this->_nb_life = rf.getnb_life();
 		this->_name = rf.getname();
 		this->_score = rf.getscore();
-		this->_pos = rf.get_position();
+		this->_pos = rf.getCoord();
 		this->_c = rf.get_c();
 		this->_type = rf.get_type();
+		this->_tir = rf.getTir();
 	}
 	return (*this);
 }

@@ -6,7 +6,7 @@
 //   By: mdrissi <mdrissi@student.42.fr>            +#+  +:+       +#+        //
 //                                                +#+#+#+#+#+   +#+           //
 //   Created: 2015/01/10 17:25:32 by mdrissi           #+#    #+#             //
-//   Updated: 2015/01/11 00:05:22 by mdrissi          ###   ########.fr       //
+//   Updated: 2015/01/11 00:49:16 by mle-roy          ###   ########.fr       //
 //                                                                            //
 // ************************************************************************** //
 
@@ -15,13 +15,14 @@
 
 #include <iostream>
 #include "gameEntity.class.hpp"
+#include "defines.hpp"
 
 class Obstacle : public GameEntity
 {
 
 public:
 	Obstacle( void);
-	Obstacle(coord pos, char c, int typeob);
+	Obstacle(coord pos, char c, int typeob, int maxY, int maxX);
 	Obstacle(Obstacle const & rf);
 	~Obstacle( void );
 

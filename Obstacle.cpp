@@ -6,7 +6,7 @@
 //   By: mdrissi <mdrissi@student.42.fr>            +#+  +:+       +#+        //
 //                                                +#+#+#+#+#+   +#+           //
 //   Created: 2015/01/10 18:26:15 by mdrissi           #+#    #+#             //
-//   Updated: 2015/01/11 00:08:16 by mdrissi          ###   ########.fr       //
+//   Updated: 2015/01/11 01:18:40 by mle-roy          ###   ########.fr       //
 //                                                                            //
 // ************************************************************************** //
 
@@ -18,7 +18,8 @@ Obstacle::Obstacle(void)
 	return ;
 }
 
-Obstacle::Obstacle(coord pos, char c, int typeob) : GameEntity(1, pos, c, 3), _typeob(typeob)
+Obstacle::Obstacle(coord pos, char c, int typeob, int maxY, int maxX)
+	: GameEntity(1, pos, c, 3, maxY, maxX), _typeob(typeob)
 {
 	return ;
 }
@@ -54,7 +55,7 @@ Obstacle & Obstacle::operator=(Obstacle const & rf)
 	if (this != &rf)
 	{
 		this->_c = rf.get_c();
-		this->_pos = rf.get_position();
+		this->_pos = rf.getCoord();
 		this->_alive = rf.getAlive();
 		this->_c = rf.get_c();
 		this->_typeob = rf.get_typeob();

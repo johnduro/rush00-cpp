@@ -6,7 +6,7 @@
 //   By: mle-roy <mle-roy@student.42.fr>            +#+  +:+       +#+        //
 //                                                +#+#+#+#+#+   +#+           //
 //   Created: 2015/01/10 16:05:31 by mle-roy           #+#    #+#             //
-//   Updated: 2015/01/11 00:19:30 by mle-roy          ###   ########.fr       //
+//   Updated: 2015/01/11 01:38:05 by mle-roy          ###   ########.fr       //
 //                                                                            //
 // ************************************************************************** //
 
@@ -17,11 +17,15 @@
 // ** CANONICAL ** //
 gameManager::gameManager( void )
 {
+	coord		coord;
+
+	coord.x = this->_maxX / 2;
+	coord.y = this->_maxY - 2;
 	this->_isInit = false;
 	this->_entities = new t_list;
 	this->_entities->start = NULL;
 	this->_entities->end = NULL;
-	this->_player = new Player();
+	this->_player = new Player(coord, "Player", 5, 'M', 0, this->_maxY, this->_maxX);
 }
 
 gameManager::gameManager( gameManager const & src )
@@ -37,7 +41,7 @@ gameManager::gameManager( gameManager const & src )
 
 gameManager::~gameManager( void )
 {
-	if (this->isInit)
+	if (this->_isInit)
 		endwin();
 	delete this->_player;
 	this->_deleteAllEntities();
@@ -61,7 +65,7 @@ void					gameManager::_refresh( void )
 	wrefresh(this->_score);
 }
 
-void					gameManager::_drawBorder(WINDOW *screen)
+void					gameManager::_drawBorders(WINDOW *screen)
 {
 	int		x;
 	int		y;
@@ -103,7 +107,7 @@ void					gameManager::_deleteAllEntities( void )
 	delete this->_entities;
 }
 
-void					gameManager::_addEntity(gameEntity* newEntity, int owner)
+void					gameManager::_addEntity(GameEntity* newEntity, int owner)
 {
 	t_entity		*node = new t_entity;
 
@@ -146,8 +150,6 @@ void					gameManager::_removeEntity(t_entity *ptr)
 
 int						gameManager::_treatInput( int input )
 {
-	coord		coord;
-
 	if (input == UP || input == DOWN || input == LEFT || input == RIGHT)
 		this->_player->move(input, this->_maxY, this->_maxX);
 	else if (input == SPACE)
@@ -159,16 +161,16 @@ int						gameManager::_treatInput( int input )
 
 void				gameManager::_addShoot( coord coord, int direction, char print, int owner )
 {
-	Tir		*fire = new Tir(coord, direction, print);
+	Tir		*fire = new Tir(coord, direction, print, this->_maxY, this->_maxX);
 
 	this->_addEntity(fire, owner);
 }
 
-int				gameManager::_makeGame( void );
+int				gameManager::_makeGame( void )
 {
 //	this->_scrollDown();//??
 	this->_playLoop();
-	if (this->checkForDead())
+	if (this->_checkForDead())
 		return (1);
 	if (this->_isTimeYet(this->_nextGen))
 		this->_generateEnemy();
@@ -181,17 +183,19 @@ void				gameManager::_printScreenField( void )
 	coord			coord;
 	int				colorPair;
 	int				type;
+	char			c;
 
 	ptr = this->_entities->start;
 	this->_drawBorders(this->_field);
 	this->_drawBorders(this->_score);
 	coord = this->_player->getCoord();
 	attron(COLOR_PAIR(YELLOW));
-	mvwprintw(this->_field, coord.y, coord.x, this->_player->getChar());
+	c = this->_player->get_c();
+	mvwprintw(this->_field, coord.y, coord.x, &c);
 	attroff(COLOR_PAIR(YELLOW));
 	while (ptr)
 	{
-		type = ptr->entity->getType();
+		type = ptr->entity->get_type();
 		coord = ptr->entity->getCoord();
 		if (type == TIR)
 		{
@@ -202,9 +206,10 @@ void				gameManager::_printScreenField( void )
 		}
 		else if (type == ENEMY || type == OBSTACLE)
 			colorPair = WHITE;
-		attron(COLOR_PAIR(pair));
- 		mvwprintw(this->_field, coord.y, coord.x, ptr->entity->getChar());
-		attroff(COLOR_PAIR(pair));
+		attron(COLOR_PAIR(colorPair));
+		c = ptr->entity->get_c();
+ 		mvwprintw(this->_field, coord.y, coord.x, &c);
+		attroff(COLOR_PAIR(colorPair));
 		ptr = ptr->next;
 	}
 }
@@ -218,7 +223,7 @@ void				gameManager::_generateEnemy( void )
 {
 	int				nbEnemy;
 	int				nbObs;
-	gameEntity*		*newE;
+	GameEntity*		*newE;
 	coord			coord;
 
 	nbEnemy = rand() % 4;
@@ -227,14 +232,14 @@ void				gameManager::_generateEnemy( void )
 	{
 		coord.y = 1;
 		coord.x = rand() % this->_maxX;;
-		newE = new Ennemy(coord, "Y", 1);
+		newE = new Ennemy(coord, ENNEMY,  "Y", this->_maxY, this->_maxX);
 		this->_addEntity(newE, COMPUTER);
 	}
 	for (i = 0; i < nbObs; i++)
 	{
 		coord.y = 1;
 		coord.x = rand() % this->_maxX;;
-		newE = new Obstacle(coord, "O", 1);
+		newE = new Obstacle(coord, "O", 1, this->_maxY, this->_maxX);
 		this->_addEntity(newE, COMPUTER);
 	}
 	this->_planNextGen();
@@ -403,7 +408,7 @@ void					gameManager::loop( void )
 	}
 }
 
-t_list*					gameManager::cloneEntities( void )
+t_list*					gameManager::cloneEntities( void ) const
 {
 	t_list		*newL = new t_list;
 	t_entity	*ptr;
@@ -415,7 +420,7 @@ t_list*					gameManager::cloneEntities( void )
 	while (ptr)
 	{
 		newE = new t_entity;
-		newE->entity = new gameEntity(*(ptr->entity));
+		newE->entity = new GameEntity(*(ptr->entity));
 		newE->prev = NULL;
 		newE->next = NULL;
 		this->_addClonedEntity(newL, newE);
@@ -424,27 +429,27 @@ t_list*					gameManager::cloneEntities( void )
 	return (newL);
 }
 
-Player*					gameManager::clonePlayer( void )
+Player*					gameManager::clonePlayer( void ) const
 {
-	return (new Player(this->_player));
+	return (new Player(*(this->_player)));
 }
 
-int						gameManager::getMaxY( void )
+int						gameManager::getMaxY( void ) const
 {
 	return (this->_maxY);
 }
 
-int						gameManager::getMaxX( void )
+int						gameManager::getMaxX( void ) const
 {
 	return (this->_maxX);
 }
 
-WINDOW					gameManager::*getField( void )
+WINDOW*					gameManager::getField( void ) const
 {
 	return (this->_field);
 }
 
-WINDOW					gameManager::*getScore( void )
+WINDOW*					gameManager::getScore( void ) const
 {
 	return (this->_score);
 }
