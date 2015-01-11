@@ -6,7 +6,7 @@
 //   By: mle-roy <mle-roy@student.42.fr>            +#+  +:+       +#+        //
 //                                                +#+#+#+#+#+   +#+           //
 //   Created: 2015/01/10 16:05:31 by mle-roy           #+#    #+#             //
-//   Updated: 2015/01/11 06:11:21 by mle-roy          ###   ########.fr       //
+//   Updated: 2015/01/11 07:09:27 by mle-roy          ###   ########.fr       //
 //                                                                            //
 // ************************************************************************** //
 
@@ -37,6 +37,8 @@ gameManager::gameManager( void )
 	this->_entities->start = NULL;
 	this->_entities->end = NULL;
 	this->_player = NULL;
+	this->_ennemy = 0;
+	this->_tir = 0;
 	// this->_player = new Player(coord, "Player", 5, 'M', 0, this->_maxY, this->_maxX);
 }
 
@@ -143,6 +145,18 @@ void					gameManager::_addEntity(GameEntity* newEntity, int owner)
 
 void					gameManager::_removeEntity(t_entity *ptr)
 {
+	if (ptr->entity->get_type() == TIR)
+	{
+		this->_tir--;
+		if (this->_tir < 0)
+			this->_tir = 0;
+	}
+	else if (ptr->entity->get_type() == ENNEMY || ptr->entity->get_type() == OBSTACLE)
+	{
+		this->_ennemy--;
+		if (this->_ennemy < 0)
+			this->_ennemy = 0;
+	}
 	if (ptr->next && ptr->prev)
 	{
 		ptr->prev->next = ptr->next;
@@ -174,9 +188,13 @@ int						gameManager::_treatInput( int input )
 
 void				gameManager::_addShoot( coord coord, int direction, char print, int owner )
 {
+	if (this->_tir >= this->_maxTir)
+		return ;
+
 	Tir		*fire = new Tir(coord, direction, print, this->_maxY, this->_maxX);
 
 	this->_addEntity(fire, owner);
+	this->_tir++;
 }
 
 int				gameManager::_makeGame( void )
@@ -269,28 +287,34 @@ void				gameManager::_generateEnemy( void )
 	coord			coord;
 
 	this->debug("::::::::: IN GENERATE ENNEMY");
-	// nbEnemy = rand() % 4;
-	// nbObs = rand() % 2;
-	nbEnemy = 1;
-	nbObs = 1;
+	nbEnemy = rand() % 4;
+	nbObs = rand() % 2;
+	// nbEnemy = 1;
+	// nbObs = 1;
 	for (i = 0; i < nbEnemy; i++)
 	{
+		if (this->_ennemy >= this->_maxEnnemy)
+			break ;
 		coord.y = 3;
-		// coord.x = rand() % this->_maxX;
-		coord.x = 10;
+		coord.x = (rand() % (this->_maxX - 2)) + 1;
+		// coord.x = 10;
 		newE = new Ennemy(coord, ENNEMY,  'Y', this->_maxY, this->_maxX);
 		this->_addEntity(newE, COMPUTER);
+		this->_ennemy++;
 	}
 	for (i = 0; i < nbObs; i++)
 	{
+		if (this->_ennemy > this->_maxEnnemy)
+			break ;
 		coord.y = 2;
-		// coord.x = rand() % this->_maxX;;
-		coord.x = 20;
+		coord.x = (rand() % (this->_maxX - 2)) + 1;
+		// coord.x = 20;
 		newE = new Obstacle(coord, 'O', 1, this->_maxY, this->_maxX);
 		this->_addEntity(newE, COMPUTER);
+		this->_ennemy++;
 	}
 	this->_planNextGen();
-	this->debug("::::::::: OUT GENERATE ENNEMY");
+	 this->debug("::::::::: OUT GENERATE ENNEMY");
 }
 
 // void				gameManager::_scrollDown( void )
@@ -318,11 +342,11 @@ int					gameManager::_checkForDead( void )
 	ptr = this->_entities->start;
 	while (ptr)
 	{
-		this->debug("|||||||||||| DAT 1 LOOP");
+		// this->debug("|||||||||||| DAT 1 LOOP");
 		keep = ptr->next;
 		if (!ptr->entity->getAlive())
 		{
-			this->debug("|||||||||||| CHECK DEAD 111111");
+			// this->debug("|||||||||||| CHECK DEAD 111111");
 
 			coord = ptr->entity->getPrevious();
 			mvwaddch(this->_field, coord.y, coord.x, ' ');
@@ -337,7 +361,7 @@ int					gameManager::_checkForDead( void )
 		coord = ptr->entity->getCoord();
 		while (other)
 		{
-			this->debug("|||||||||||| DAT 2 LOOP");
+			// this->debug("|||||||||||| DAT 2 LOOP");
 			if (ptr != other)
 			{
 				if (other->entity->isHurt(ptr->entity->getCoord()))
@@ -363,12 +387,12 @@ int					gameManager::_checkForDead( void )
 		}
 		ptr = keep;
 	}
-	this->debug("|||||||||||| CHECK DEAD 2222222222");
+	// this->debug("|||||||||||| CHECK DEAD 2222222222");
 	ptr = this->_entities->start;
 	coord = this->_player->getCoord();
 	while (ptr)
 	{
-		this->debug("|||||||||||| DAT 3 LOOP");
+		// this->debug("|||||||||||| DAT 3 LOOP");
 		if (ptr->entity->isHurt(coord))
 		{
 			this->debug("|||||||||||| OUT CHECK DEAD 1");
@@ -483,6 +507,7 @@ void					gameManager::loop( void )
 	this->_planNextGen();
 	while (42)
 	{
+		this->debug("IN -----___LOOOPALOOP");
 		input = getch();
 		if (input >= 0)
 		{
@@ -492,9 +517,13 @@ void					gameManager::loop( void )
 		if (this->_makeGame())
 			return ;
 //		clear();
+		this->debug("IN ----- PRINTSCREEN");
 		this->_printScreenField();
+		this->debug(" OUT SCREEN || IN SCORE");
 		this->_printScreenScore();
+		this->debug("OUT SCORE || REFRESH");
 		this->_refresh();
+		this->debug("OUT -----___LOOOPALOOP");
 	}
 }
 

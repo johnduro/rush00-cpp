@@ -6,7 +6,7 @@
 //   By: mle-roy <mle-roy@student.42.fr>            +#+  +:+       +#+        //
 //                                                +#+#+#+#+#+   +#+           //
 //   Created: 2015/01/10 18:30:03 by mle-roy           #+#    #+#             //
-//   Updated: 2015/01/11 03:01:01 by mle-roy          ###   ########.fr       //
+//   Updated: 2015/01/11 06:51:22 by mle-roy          ###   ########.fr       //
 //                                                                            //
 // ************************************************************************** //
 
@@ -37,7 +37,7 @@ struct	coord{
 # define MAGENTA 4
 # define RESPAWN_TIME 4
 # define PLAY_TIME 1
-# define FIRE_TIME 1500000
+# define FIRE_TIME 8000000
 # define OBSTACLE_TIME 500000
 # define FIRE_MOVE_TIME 250000
 
