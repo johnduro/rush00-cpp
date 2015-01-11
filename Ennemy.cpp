@@ -6,7 +6,7 @@
 //   By: mdrissi <mdrissi@student.42.fr>            +#+  +:+       +#+        //
 //                                                +#+#+#+#+#+   +#+           //
 //   Created: 2015/01/10 20:03:57 by mdrissi           #+#    #+#             //
-//   Updated: 2015/01/11 06:44:07 by mle-roy          ###   ########.fr       //
+//   Updated: 2015/01/11 10:08:46 by mle-roy          ###   ########.fr       //
 //                                                                            //
 // ************************************************************************** //
 
@@ -43,7 +43,7 @@ Ennemy::~Ennemy( void )
 	return ;
 }
 
-void	Ennemy::_planNextFire( void ) //
+void	Ennemy::_planNextFire( void )
 {
 	struct timeval		cur;
 	struct timeval		add;
@@ -54,7 +54,7 @@ void	Ennemy::_planNextFire( void ) //
 	timeradd(&cur, &add, &(this->_fire));
 }
 
-void	Ennemy::_planNextPlay( void ) //
+void	Ennemy::_planNextPlay( void )
 {
 	struct timeval		cur;
 	struct timeval		add;
@@ -68,7 +68,7 @@ void	Ennemy::_planNextPlay( void ) //
 
 // * GETTER / SETTER
 
-struct timeval		Ennemy::getPlayTime( void ) const //
+struct timeval		Ennemy::getPlayTime( void ) const
 {
 	return (this->_play);
 }

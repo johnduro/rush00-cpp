@@ -6,7 +6,7 @@
 //   By: mle-roy <mle-roy@student.42.fr>            +#+  +:+       +#+        //
 //                                                +#+#+#+#+#+   +#+           //
 //   Created: 2015/01/10 16:24:08 by mle-roy           #+#    #+#             //
-//   Updated: 2015/01/11 03:13:34 by mle-roy          ###   ########.fr       //
+//   Updated: 2015/01/11 10:07:43 by mle-roy          ###   ########.fr       //
 //                                                                            //
 // ************************************************************************** //
 
@@ -21,7 +21,6 @@ int			main( void )
 
 	srand(time(NULL));
 	manager->init();
-	// manager->menu(); //?????????????????
 	manager->loop();
 	delete manager;
 	return (0);

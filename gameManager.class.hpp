@@ -6,7 +6,7 @@
 //   By: mle-roy <mle-roy@student.42.fr>            +#+  +:+       +#+        //
 //                                                +#+#+#+#+#+   +#+           //
 //   Created: 2015/01/10 16:05:24 by mle-roy           #+#    #+#             //
-//   Updated: 2015/01/11 09:26:33 by mle-roy          ###   ########.fr       //
+//   Updated: 2015/01/11 10:06:47 by mle-roy          ###   ########.fr       //
 //                                                                            //
 // ************************************************************************** //
 
@@ -72,7 +72,6 @@ private :
 	void				_printScreenField( void );
 	void				_printScreenScore( void );
 	void				_generateEnemy( void );
-	// void				_scrollDown( void );
 	int					_checkForDead( void );
 	void				_playLoop( void );
 	void				_planNextGen( void );

@@ -6,7 +6,7 @@
 //   By: mdrissi <mdrissi@student.42.fr>            +#+  +:+       +#+        //
 //                                                +#+#+#+#+#+   +#+           //
 //   Created: 2015/01/10 18:47:49 by mdrissi           #+#    #+#             //
-//   Updated: 2015/01/11 06:43:26 by mle-roy          ###   ########.fr       //
+//   Updated: 2015/01/11 10:08:12 by mle-roy          ###   ########.fr       //
 //                                                                            //
 // ************************************************************************** //
 
@@ -39,7 +39,7 @@ Tir::~Tir( void )
 	return ;
 }
 
-void	Tir::_planNextPlay( void ) //
+void	Tir::_planNextPlay( void )
 {
 	struct timeval		cur;
 	struct timeval		add;

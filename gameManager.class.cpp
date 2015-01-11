@@ -6,13 +6,12 @@
 //   By: mle-roy <mle-roy@student.42.fr>            +#+  +:+       +#+        //
 //                                                +#+#+#+#+#+   +#+           //
 //   Created: 2015/01/10 16:05:31 by mle-roy           #+#    #+#             //
-//   Updated: 2015/01/11 10:02:15 by mle-roy          ###   ########.fr       //
+//   Updated: 2015/01/11 10:06:23 by mle-roy          ###   ########.fr       //
 //                                                                            //
 // ************************************************************************** //
 
 #include <sys/time.h>
 #include <cstdlib>
-#include <stdio.h> //enlever
 #include "Player.hpp"
 #include "gameManager.class.hpp"
 #include "defines.hpp"
@@ -28,10 +27,6 @@ void	gameManager::debug(std::string msg)
 // ** CANONICAL ** //
 gameManager::gameManager( void )
 {
-	// coord		coord;
-
-	// coord.x = this->_maxX / 2;
-	// coord.y = this->_maxY - 2;
 	this->_isInit = false;
 	this->_entities = new t_list;
 	this->_entities->start = NULL;
@@ -39,7 +34,6 @@ gameManager::gameManager( void )
 	this->_player = NULL;
 	this->_ennemy = 0;
 	this->_tir = 0;
-	// this->_player = new Player(coord, "Player", 5, 'M', 0, this->_maxY, this->_maxX);
 }
 
 gameManager::gameManager( gameManager const & src )
@@ -86,18 +80,15 @@ void					gameManager::_drawBorders(WINDOW *screen)
 	int		i;
 
 	getmaxyx(screen, y, x);
-	// corners
 	mvwprintw(screen, 0, 0, "+");
 	mvwprintw(screen, y - 1, 0, "+");
 	mvwprintw(screen, 0, x - 1, "+");
 	mvwprintw(screen, y - 1, x - 1, "+");
-	// sides
 	for (i = 1; i < (y - 1); i++)
 	{
 		mvwprintw(screen, i, 0, "|");
 		mvwprintw(screen, i, x - 1, "|");
 	}
-	// top and bottom
 	for (i = 1; i < (x - 1); i++)
 	{
 		mvwprintw(screen, 0, i, "-");
@@ -211,18 +202,11 @@ void				gameManager::_addShoot( coord coord, int direction, char print, int owne
 
 int				gameManager::_makeGame( void )
 {
-//	this->_scrollDown();//??
-	this->debug("-- IN MAKE GAME");
-
 	this->_playLoop();
 	if (this->_checkForDead())
-	{
-		this->debug("<< OUT MAKE GAME 1");
 		return (1);
-	}
 	if (this->isTimeYet(this->_nextGen))
 		this->_generateEnemy();
-	this->debug("<< OUT MAKE GAME");
 	return (0);
 }
 
@@ -233,29 +217,15 @@ void				gameManager::_printScreenField( void )
 
 	int				colorPair;
 	int				type;
-	// char			c;
-	// coord			p;
-	// int mvwaddch(WINDOW *win, int y, int x, const chtype ch);
-	ptr = this->_entities->start;
-	// p = this->_player->getPrevious();
-	// attron(COLOR_PAIR(YELLOW));
-	// wbkgd(this->_field, COLOR_PAIR(YELLOW));
-	// c = this->_player->get_c();
-	// mvwprintw(this->_field, p.y, p.x, " ");
 
+	ptr = this->_entities->start;
 	coord = this->_player->getPrevious();
-	// mvwprintw(this->_field, coord.y, coord.x, " ");
 	mvwaddch(this->_field, coord.y, coord.x, ' ');
 	coord = this->_player->getCoord();
 	mvwaddch(this->_field, coord.y, coord.x, this->_player->get_c() | COLOR_PAIR(YELLOW));
-	// mvwprintw(this->_field, coord.y, coord.x, &c);
-
-	// wbkgd(this->_field, COLOR_PAIR(WHITE));
-	// attroff(COLOR_PAIR(YELLOW));
 	while (ptr)
 	{
 		type = ptr->entity->get_type();
-		// p = ptr->entity->getPrevious();
 		if (type == TIR)
 		{
 			if (ptr->owner == COMPUTER)
@@ -267,20 +237,10 @@ void				gameManager::_printScreenField( void )
 			colorPair = GREEN;
 		else
 			colorPair = WHITE;
-		// wbkgd(this->_field, COLOR_PAIR(colorPair));
-		// attron(COLOR_PAIR(colorPair));
-		// c = ptr->entity->get_c();
-		// mvwprintw(this->_field, p.y, p.x, " ");
-
 		coord = ptr->entity->getPrevious();
 		mvwaddch(this->_field, coord.y, coord.x, ' ');
- 		// mvwprintw(this->_field, coord.y, coord.x, " ");
 		coord = ptr->entity->getCoord();
 		mvwaddch(this->_field, coord.y, coord.x, ptr->entity->get_c() | COLOR_PAIR(colorPair));
- 		// mvwprintw(this->_field, coord.y, coord.x, &c);
-
-		// wbkgd(this->_field, COLOR_PAIR(WHITE));
-		// attroff(COLOR_PAIR(colorPair));
 		ptr = ptr->next;
 	}
 }
@@ -299,18 +259,14 @@ void				gameManager::_generateEnemy( void )
 	GameEntity*		newE;
 	coord			coord;
 
-	this->debug("::::::::: IN GENERATE ENNEMY");
 	nbEnemy = rand() % 4;
 	nbObs = rand() % 2;
-	// nbEnemy = 1;
-	// nbObs = 1;
 	for (i = 0; i < nbEnemy; i++)
 	{
 		if (this->_ennemy >= this->_maxEnnemy)
 			break ;
 		coord.y = 3;
 		coord.x = (rand() % (this->_maxX - 2)) + 1;
-		// coord.x = 10;
 		newE = new Ennemy(coord, ENNEMY,  'Y', this->_maxY, this->_maxX);
 		this->_addEntity(newE, COMPUTER);
 		this->_ennemy++;
@@ -321,27 +277,12 @@ void				gameManager::_generateEnemy( void )
 			break ;
 		coord.y = 2;
 		coord.x = (rand() % (this->_maxX - 2)) + 1;
-		// coord.x = 20;
 		newE = new Obstacle(coord, 'O', 1, this->_maxY, this->_maxX);
 		this->_addEntity(newE, COMPUTER);
 		this->_ennemy++;
 	}
 	this->_planNextGen();
-	 this->debug("::::::::: OUT GENERATE ENNEMY");
 }
-
-// void				gameManager::_scrollDown( void )
-// {
-// 	t_entity		*ptr;
-
-// 	ptr = this->_entities->start;
-// 	while (ptr)
-// 	{
-// 		if (ptr->owner == COMPUTER)
-// 			ptr->entity->move(DOWN, this->_maxY, this->_maxX);
-// 		ptr = ptr->next;
-// 	}
-// }
 
 int					gameManager::_checkForDead( void )
 {
@@ -349,18 +290,13 @@ int					gameManager::_checkForDead( void )
 	t_entity		*keep;
 	t_entity		*other;
 	coord			coord;
-	// coord			coord_2;
 
-	this->debug("|||||||||||| IN CHECK DEAD");
 	ptr = this->_entities->start;
 	while (ptr)
 	{
-		// this->debug("|||||||||||| DAT 1 LOOP");
 		keep = ptr->next;
 		if (!ptr->entity->getAlive())
 		{
-			// this->debug("|||||||||||| CHECK DEAD 111111");
-
 			coord = ptr->entity->getPrevious();
 			mvwaddch(this->_field, coord.y, coord.x, ' ');
 			coord = ptr->entity->getCoord();
@@ -374,7 +310,6 @@ int					gameManager::_checkForDead( void )
 		coord = ptr->entity->getCoord();
 		while (other)
 		{
-			// this->debug("|||||||||||| DAT 2 LOOP");
 			if (ptr != other)
 			{
 				if (other->entity->isHurt(ptr->entity->getCoord()))
@@ -400,20 +335,14 @@ int					gameManager::_checkForDead( void )
 		}
 		ptr = keep;
 	}
-	// this->debug("|||||||||||| CHECK DEAD 2222222222");
 	ptr = this->_entities->start;
 	coord = this->_player->getCoord();
 	while (ptr)
 	{
-		// this->debug("|||||||||||| DAT 3 LOOP");
 		if (ptr->entity->isHurt(coord))
-		{
-			this->debug("|||||||||||| OUT CHECK DEAD 1");
 			return (1);
-		}
 		ptr = ptr->next;
 	}
-	this->debug("|||||||||||| OUT CHECK DEAD");
 	return (0);
 }
 
@@ -546,7 +475,6 @@ void					gameManager::loop( void )
 	this->_planNextGen();
 	while (42)
 	{
-		this->debug("IN -----___LOOOPALOOP");
 		this->_checkResize();
 		input = getch();
 		if (input >= 0)
@@ -556,13 +484,9 @@ void					gameManager::loop( void )
 		}
 		if (this->_makeGame())
 			return ;
-		this->debug("IN ----- PRINTSCREEN");
 		this->_printScreenField();
-		this->debug(" OUT SCREEN || IN SCORE");
 		this->_printScreenScore();
-		this->debug("OUT SCORE || REFRESH");
 		this->_refresh();
-		this->debug("OUT -----___LOOOPALOOP");
 	}
 }
 
@@ -578,7 +502,6 @@ t_list*					gameManager::cloneEntities( void ) const
 	while (ptr)
 	{
 		newE = new t_entity;
-		// newE->entity = new GameEntity(*(ptr->entity));
 		newE->entity = ptr->entity;
 		newE->prev = NULL;
 		newE->next = NULL;
