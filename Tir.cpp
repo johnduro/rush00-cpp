@@ -6,7 +6,7 @@
 //   By: mdrissi <mdrissi@student.42.fr>            +#+  +:+       +#+        //
 //                                                +#+#+#+#+#+   +#+           //
 //   Created: 2015/01/10 18:47:49 by mdrissi           #+#    #+#             //
-//   Updated: 2015/01/11 01:19:18 by mle-roy          ###   ########.fr       //
+//   Updated: 2015/01/11 03:08:16 by mle-roy          ###   ########.fr       //
 //                                                                            //
 // ************************************************************************** //
 
@@ -14,12 +14,14 @@
 
 Tir::Tir( void )
 {
+	this->_planNextPlay();
 	return ;
 }
 
 Tir::Tir(coord pos, int dir, char typetir, int maxY, int maxX)
-	: GameEntity(1, pos, 0, 1, maxY, maxX), _dir(dir), _typetir(typetir)
+	: GameEntity(1, pos, 0, 1, maxY, maxX, dir), _typetir(typetir)
 {
+	this->_planNextPlay();
 	this->move(dir, maxY, maxX);
 	this->move(dir, maxY, maxX);
 	return ;
@@ -27,6 +29,7 @@ Tir::Tir(coord pos, int dir, char typetir, int maxY, int maxX)
 
 Tir::Tir(Tir const & rf) : GameEntity()
 {
+	this->_planNextPlay();
 	*this = rf;
 	return ;
 }
@@ -34,6 +37,17 @@ Tir::Tir(Tir const & rf) : GameEntity()
 Tir::~Tir( void )
 {
 	return ;
+}
+
+void	Tir::_planNextPlay( void ) //
+{
+	struct timeval		cur;
+	struct timeval		add;
+
+	gettimeofday(&cur, NULL);
+	add.tv_sec = 0;
+	add.tv_usec = FIRE_MOVE_TIME;
+	timeradd(&cur, &add, &(this->_play));
 }
 
 // * Getter / Stter *//
@@ -58,6 +72,13 @@ void	Tir::set_dir(int const d)
 	this->_dir = d;
 }
 
+int		Tir::play( void )
+{
+	this->move(this->_dir, this->_maxY, this->_maxX);
+	this->_planNextPlay();
+	return (0);
+}
+
 Tir &	Tir::operator=(Tir const & rf)
 {
 	if (this != &rf)
@@ -70,4 +91,9 @@ Tir &	Tir::operator=(Tir const & rf)
 		this->_c = rf.get_c();
 	}
 	return (*this);
+}
+
+char	Tir::getTir( void ) const
+{
+	return (this->_typetir);
 }

@@ -6,7 +6,7 @@
 //   By: mle-roy <mle-roy@student.42.fr>            +#+  +:+       +#+        //
 //                                                +#+#+#+#+#+   +#+           //
 //   Created: 2015/01/10 16:05:34 by mle-roy           #+#    #+#             //
-//   Updated: 2015/01/11 01:19:36 by mle-roy          ###   ########.fr       //
+//   Updated: 2015/01/11 03:04:11 by mle-roy          ###   ########.fr       //
 //                                                                            //
 // ************************************************************************** //
 
@@ -17,8 +17,8 @@ GameEntity::GameEntity( void )
 	return ;
 }
 
-GameEntity::GameEntity(bool alive, coord pos, char c, int type, int maxY, int maxX)
-	: _alive(alive), _pos(pos), _c(c), _type(type), _maxY(maxY), _maxX(maxX)
+GameEntity::GameEntity(bool alive, coord pos, char c, int type, int maxY, int maxX, int dir)
+	: _alive(alive), _pos(pos), _c(c), _type(type), _maxY(maxY), _maxX(maxX), _dir(dir)
 {
 	return ;
 }
@@ -42,6 +42,13 @@ coord	GameEntity::getCoord( void ) const
 bool	GameEntity::getAlive( void ) const
 {
 	return (this->_alive);
+}
+
+bool	GameEntity::isHurt( coord coord ) const
+{
+	if (coord.x == this->_pos.x && coord.y == this->_pos.y)
+		return (true);
+	return (false);
 }
 
 char	GameEntity::get_c( void ) const
@@ -106,4 +113,9 @@ GameEntity	& GameEntity::operator=(GameEntity const & rf)
 		this->_type = rf.get_type();
 	}
 	return (*this);
+}
+
+int		GameEntity::getDirection( void ) const
+{
+	return (this->_dir);
 }

@@ -6,7 +6,7 @@
 //   By: mdrissi <mdrissi@student.42.fr>            +#+  +:+       +#+        //
 //                                                +#+#+#+#+#+   +#+           //
 //   Created: 2015/01/10 16:42:04 by mdrissi           #+#    #+#             //
-//   Updated: 2015/01/11 01:24:54 by mle-roy          ###   ########.fr       //
+//   Updated: 2015/01/11 02:38:45 by mle-roy          ###   ########.fr       //
 //                                                                            //
 // ************************************************************************** //
 
@@ -14,6 +14,7 @@
 # define ENNEMY_HPP
 
 #include <iostream>
+#include <sys/time.h>
 #include "gameEntity.class.hpp"
 #include "defines.hpp"
 
@@ -31,11 +32,20 @@ public:
 	void	set_id(int const id);
 	Ennemy & operator=(Ennemy const & rf);
 	char	getTir( void ) const;
+	struct timeval		getPlayTime( void ) const;
+	int					play( void );
 
 private:
 
 	int		_id;
 	char	_tir;
+	struct timeval _fire;
+	struct timeval _play;
+
+	void	_planNextFire( void );
+	void	_planNextPlay( void );
+
+
 };
 
 #endif // ** ENNEMY_HPP ** //

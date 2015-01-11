@@ -6,7 +6,7 @@
 //   By: mle-roy <mle-roy@student.42.fr>            +#+  +:+       +#+        //
 //                                                +#+#+#+#+#+   +#+           //
 //   Created: 2015/01/10 16:05:24 by mle-roy           #+#    #+#             //
-//   Updated: 2015/01/11 01:28:10 by mle-roy          ###   ########.fr       //
+//   Updated: 2015/01/11 03:12:29 by mle-roy          ###   ########.fr       //
 //                                                                            //
 // ************************************************************************** //
 
@@ -70,8 +70,7 @@ private :
 	int					_checkForDead( void );
 	void				_playLoop( void );
 	void				_planNextGen( void );
-	bool				_isTimeYet(struct timeval ok);
-	void				_addClonedEntity(t_list *newL, t_entity *newE);
+	void				_addClonedEntity(t_list *newL, t_entity *newE) const;
 
 public :
 	// ** CANONICAL ** //
@@ -89,6 +88,7 @@ public :
 	int						getMaxX( void ) const ;
 	WINDOW					*getField( void ) const ;
 	WINDOW					*getScore( void ) const ;
+	static bool				isTimeYet(struct timeval ok);
 };
 
 #endif // ** GAMEMANAGER_CLASS_HPP ** //

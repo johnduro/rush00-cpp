@@ -6,7 +6,7 @@
 //   By: mle-roy <mle-roy@student.42.fr>            +#+  +:+       +#+        //
 //                                                +#+#+#+#+#+   +#+           //
 //   Created: 2015/01/10 16:05:28 by mle-roy           #+#    #+#             //
-//   Updated: 2015/01/11 01:17:34 by mle-roy          ###   ########.fr       //
+//   Updated: 2015/01/11 03:06:30 by mle-roy          ###   ########.fr       //
 //                                                                            //
 // ************************************************************************** //
 
@@ -14,18 +14,20 @@
 # define GAMEENTITY_CLASS_HPP
 
 #include "defines.hpp"
+#include <sys/time.h>
 
 class GameEntity
 {
 public:
 
 	GameEntity( void );
-	GameEntity( bool alive, coord pos, char c, int type, int maxY, int maxX);
+	GameEntity( bool alive, coord pos, char c, int type, int maxY, int maxX, int dir);
 	GameEntity( GameEntity const & entity);
-	~GameEntity( void );
+	virtual ~GameEntity( void );
 
 	coord	getCoord( void ) const;
 	bool	getAlive( void ) const;
+	bool	isHurt( coord coord ) const;
 	char	get_c( void ) const;
 	int		get_type( void ) const;
 
@@ -36,6 +38,11 @@ public:
 
 	void	move(int dir, int maxY, int maxX);
 	GameEntity	& operator=(GameEntity const & rf);
+	virtual	int		play( void );
+	virtual	struct timeval		getPlayTime( void );
+	virtual	char	getTir( void ) const;
+
+	int		getDirection( void ) const;
 
 protected:
 
@@ -45,6 +52,7 @@ protected:
 	int			_type;
 	int			_maxY;
 	int			_maxX;
+	int			_dir;
 
 };
 

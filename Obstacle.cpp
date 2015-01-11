@@ -6,7 +6,7 @@
 //   By: mdrissi <mdrissi@student.42.fr>            +#+  +:+       +#+        //
 //                                                +#+#+#+#+#+   +#+           //
 //   Created: 2015/01/10 18:26:15 by mdrissi           #+#    #+#             //
-//   Updated: 2015/01/11 01:18:40 by mle-roy          ###   ########.fr       //
+//   Updated: 2015/01/11 03:09:27 by mle-roy          ###   ########.fr       //
 //                                                                            //
 // ************************************************************************** //
 
@@ -19,7 +19,7 @@ Obstacle::Obstacle(void)
 }
 
 Obstacle::Obstacle(coord pos, char c, int typeob, int maxY, int maxX)
-	: GameEntity(1, pos, c, 3, maxY, maxX), _typeob(typeob)
+	: GameEntity(1, pos, c, 3, maxY, maxX, DOWN), _typeob(typeob)
 {
 	return ;
 }
@@ -48,6 +48,24 @@ void	Obstacle::set_typeob(int const type)
 	return ;
 }
 
+void	Obstacle::_planNextPlay( void )
+{
+	struct timeval		cur;
+	struct timeval		add;
+
+	gettimeofday(&cur, NULL);
+	add.tv_sec = 0;
+	add.tv_usec = OBSTACLE_TIME;
+	timeradd(&cur, &add, &(this->_play));
+}
+
+int		Obstacle::play( void )
+{
+	this->move(this->_dir, this->_maxY, this->_maxX);
+	this->_planNextPlay();
+	return (0);
+}
+
 // * operator *//
 
 Obstacle & Obstacle::operator=(Obstacle const & rf)
@@ -62,4 +80,14 @@ Obstacle & Obstacle::operator=(Obstacle const & rf)
 		this->_type = rf.get_type();
 	}
 	return *this;
+}
+
+struct timeval		Obstacle::getPlayTime( void ) const
+{
+	return (this->_play);
+}
+
+char		Obstacle::getTir( void ) const
+{
+	return 'p';
 }

@@ -6,11 +6,12 @@
 //   By: mle-roy <mle-roy@student.42.fr>            +#+  +:+       +#+        //
 //                                                +#+#+#+#+#+   +#+           //
 //   Created: 2015/01/10 16:05:31 by mle-roy           #+#    #+#             //
-//   Updated: 2015/01/11 01:38:05 by mle-roy          ###   ########.fr       //
+//   Updated: 2015/01/11 03:12:14 by mle-roy          ###   ########.fr       //
 //                                                                            //
 // ************************************************************************** //
 
 #include <sys/time.h>
+#include <cstdlib>
 #include "gameManager.class.hpp"
 #include "defines.hpp"
 
@@ -172,7 +173,7 @@ int				gameManager::_makeGame( void )
 	this->_playLoop();
 	if (this->_checkForDead())
 		return (1);
-	if (this->_isTimeYet(this->_nextGen))
+	if (this->isTimeYet(this->_nextGen))
 		this->_generateEnemy();
 	return (0);
 }
@@ -204,7 +205,7 @@ void				gameManager::_printScreenField( void )
 			else
 				colorPair = MAGENTA;
 		}
-		else if (type == ENEMY || type == OBSTACLE)
+		else if (type == ENNEMY || type == OBSTACLE)
 			colorPair = WHITE;
 		attron(COLOR_PAIR(colorPair));
 		c = ptr->entity->get_c();
@@ -221,9 +222,10 @@ void				gameManager::_printScreenScore( void )
 
 void				gameManager::_generateEnemy( void )
 {
+	int				i;
 	int				nbEnemy;
 	int				nbObs;
-	GameEntity*		*newE;
+	GameEntity*		newE;
 	coord			coord;
 
 	nbEnemy = rand() % 4;
@@ -232,14 +234,14 @@ void				gameManager::_generateEnemy( void )
 	{
 		coord.y = 1;
 		coord.x = rand() % this->_maxX;;
-		newE = new Ennemy(coord, ENNEMY,  "Y", this->_maxY, this->_maxX);
+		newE = new Ennemy(coord, ENNEMY,  'Y', this->_maxY, this->_maxX);
 		this->_addEntity(newE, COMPUTER);
 	}
 	for (i = 0; i < nbObs; i++)
 	{
 		coord.y = 1;
 		coord.x = rand() % this->_maxX;;
-		newE = new Obstacle(coord, "O", 1, this->_maxY, this->_maxX);
+		newE = new Obstacle(coord, 'O', 1, this->_maxY, this->_maxX);
 		this->_addEntity(newE, COMPUTER);
 	}
 	this->_planNextGen();
@@ -310,9 +312,11 @@ void					gameManager::_playLoop( void )
 	ptr = this->_entities->start;
 	while (ptr)
 	{
-		// check if play ?
-		if (ptr->entity->play())
-			this->_addShoot(ptr->entity->getCoord(), ptr->entity->getDirection(), COMPUTER);
+		if (this->isTimeYet(ptr->entity->getPlayTime()))
+		{
+			if (ptr->entity->play())
+				this->_addShoot(ptr->entity->getCoord(), ptr->entity->getDirection(), ptr->entity->getTir(), COMPUTER);
+		}
 		ptr = ptr->next;
 	}
 }
@@ -328,7 +332,7 @@ void					gameManager::_planNextGen( void )
 	timeradd(&cur, &add, &(this->_nextGen));
 }
 
-bool					gameManager::_isTimeYet(struct timeval ok)
+static bool				gameManager::isTimeYet(struct timeval ok)
 {
 	struct timeval		time;
 
@@ -347,7 +351,7 @@ bool					gameManager::_isTimeYet(struct timeval ok)
 	return (false);
 }
 
-void				gameManager::_addClonedEntity(t_list *newL, t_entity *newE)
+void				gameManager::_addClonedEntity(t_list *newL, t_entity *newE) const
 {
 	if (newL->start == NULL)
 	{
@@ -416,7 +420,7 @@ t_list*					gameManager::cloneEntities( void ) const
 
 	newL->start = NULL;
 	newL->end = NULL;
-	ptr = this->_entities;
+	ptr = this->_entities->start;
 	while (ptr)
 	{
 		newE = new t_entity;
