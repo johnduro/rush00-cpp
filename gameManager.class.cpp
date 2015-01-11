@@ -6,7 +6,7 @@
 //   By: mle-roy <mle-roy@student.42.fr>            +#+  +:+       +#+        //
 //                                                +#+#+#+#+#+   +#+           //
 //   Created: 2015/01/10 16:05:31 by mle-roy           #+#    #+#             //
-//   Updated: 2015/01/11 07:09:27 by mle-roy          ###   ########.fr       //
+//   Updated: 2015/01/11 07:40:02 by mle-roy          ###   ########.fr       //
 //                                                                            //
 // ************************************************************************** //
 
@@ -145,17 +145,24 @@ void					gameManager::_addEntity(GameEntity* newEntity, int owner)
 
 void					gameManager::_removeEntity(t_entity *ptr)
 {
-	if (ptr->entity->get_type() == TIR)
+	int		type;
+
+	type = ptr->entity->get_type();
+	if (type == TIR)
 	{
 		this->_tir--;
 		if (this->_tir < 0)
 			this->_tir = 0;
 	}
-	else if (ptr->entity->get_type() == ENNEMY || ptr->entity->get_type() == OBSTACLE)
+	else if (type == ENNEMY || type == OBSTACLE)
 	{
 		this->_ennemy--;
 		if (this->_ennemy < 0)
 			this->_ennemy = 0;
+		if (type == ENNEMY)
+			this->_player->addScore(ENNEMY_SCORE);
+		else if (type == OBSTACLE)
+			this->_player->addScore(OBSTACLE_SCORE);
 	}
 	if (ptr->next && ptr->prev)
 	{
@@ -171,6 +178,11 @@ void					gameManager::_removeEntity(t_entity *ptr)
 	{
 		ptr->prev->next = NULL;
 		this->_entities->end = ptr->prev;
+	}
+	else if (ptr->prev == NULL && ptr->next == NULL)
+	{
+		this->_entities->start = NULL;
+		this->_entities->end = NULL;
 	}
 	delete ptr;
 }
@@ -275,7 +287,8 @@ void				gameManager::_printScreenField( void )
 
 void				gameManager::_printScreenScore( void )
 {
-	// mvwprintw(this->_score, 1, 1, this->_player->getScore());
+	mvwprintw(this->_score, 1, 1, "SCORE : ");
+	mvwprintw(this->_score, 1, 9, this->_player->getScore());
 }
 
 void				gameManager::_generateEnemy( void )
@@ -496,7 +509,7 @@ void					gameManager::init( void )
 	this->_refresh();
 	coord.x = this->_maxX / 2;
 	coord.y = this->_maxY - 2;
-	this->_player = new Player(coord, "Player", 5, 'M', 0, this->_maxY, this->_maxX);
+	this->_player = new Player(coord, "Player", 5, PLAYER_SPRITE, 0, this->_maxY, this->_maxX);
 	this->_isInit = true;
 }
 

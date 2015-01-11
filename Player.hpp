@@ -6,7 +6,7 @@
 //   By: mdrissi <mdrissi@student.42.fr>            +#+  +:+       +#+        //
 //                                                +#+#+#+#+#+   +#+           //
 //   Created: 2015/01/10 17:32:56 by mdrissi           #+#    #+#             //
-//   Updated: 2015/01/11 02:52:36 by mle-roy          ###   ########.fr       //
+//   Updated: 2015/01/11 07:18:42 by mle-roy          ###   ########.fr       //
 //                                                                            //
 // ************************************************************************** //
 
@@ -32,6 +32,7 @@ public:
 	int				getscore( void ) const;
 	const char*			getScore( void ) const;
 	void			setscore(int const score);
+	void			addScore(int const add);
 	std::string		getname( void ) const;
 	void			setname(std::string const name);
 	Player &	operator=(Player const & rf);

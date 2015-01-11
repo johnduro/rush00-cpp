@@ -6,7 +6,7 @@
 //   By: mdrissi <mdrissi@student.42.fr>            +#+  +:+       +#+        //
 //                                                +#+#+#+#+#+   +#+           //
 //   Created: 2015/01/10 19:02:19 by mdrissi           #+#    #+#             //
-//   Updated: 2015/01/11 03:51:36 by mle-roy          ###   ########.fr       //
+//   Updated: 2015/01/11 07:19:23 by mle-roy          ###   ########.fr       //
 //                                                                            //
 // ************************************************************************** //
 
@@ -23,13 +23,13 @@ Player::Player()
 Player::Player(coord pos, std::string name, int nb_life, char c, int score, int maxY, int maxX)
 	: GameEntity(1, pos, c, 0, maxY, maxX, UP),	_score(score), _nb_life(nb_life),_name(name)
 {
-	this->_tir = '|';
+	this->_tir = '*';
 	return ;
 }
 
 Player::Player(Player const & rf) : GameEntity()
 {
-	this->_tir = '|';
+	this->_tir = '*';
 	*this = rf;
 	return ;
 }
@@ -82,6 +82,11 @@ void	Player::setnb_life(int const nb_life)
 void	Player::setscore(int const score)
 {
 	this->_score = score;
+}
+
+void	Player::addScore(int const add)
+{
+	this->_score += add;
 }
 
 Player & Player::operator=(Player const & rf)

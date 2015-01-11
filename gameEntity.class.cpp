@@ -6,7 +6,7 @@
 //   By: mle-roy <mle-roy@student.42.fr>            +#+  +:+       +#+        //
 //                                                +#+#+#+#+#+   +#+           //
 //   Created: 2015/01/10 16:05:34 by mle-roy           #+#    #+#             //
-//   Updated: 2015/01/11 06:31:21 by mle-roy          ###   ########.fr       //
+//   Updated: 2015/01/11 07:12:33 by mle-roy          ###   ########.fr       //
 //                                                                            //
 // ************************************************************************** //
 
@@ -112,9 +112,9 @@ void	GameEntity::move(int dir, int maxY, int maxX)
 		else
 			this->_alive = false;
 	}
-	else if ((dir == LEFT) && ((tmp.x - 1) >= 0))
+	else if ((dir == LEFT) && ((tmp.x - 1) >= 1))
 		tmp.x--;
-	else if ((dir == RIGHT) && ((tmp.x + 1) <= maxX))
+	else if ((dir == RIGHT) && ((tmp.x + 1) < (maxX - 1)))
 		tmp.x++;
 	this->_previous.x = this->_pos.x;
 	this->_previous.y = this->_pos.y;

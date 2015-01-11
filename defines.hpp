@@ -6,7 +6,7 @@
 //   By: mle-roy <mle-roy@student.42.fr>            +#+  +:+       +#+        //
 //                                                +#+#+#+#+#+   +#+           //
 //   Created: 2015/01/10 18:30:03 by mle-roy           #+#    #+#             //
-//   Updated: 2015/01/11 06:51:22 by mle-roy          ###   ########.fr       //
+//   Updated: 2015/01/11 07:26:48 by mle-roy          ###   ########.fr       //
 //                                                                            //
 // ************************************************************************** //
 
@@ -40,5 +40,8 @@ struct	coord{
 # define FIRE_TIME 8000000
 # define OBSTACLE_TIME 500000
 # define FIRE_MOVE_TIME 250000
+# define ENNEMY_SCORE 1000
+# define OBSTACLE_SCORE 15
+# define PLAYER_SPRITE 'A'
 
 #endif // ** DEFINES_HPP ** //
