@@ -6,7 +6,7 @@
 //   By: mdrissi <mdrissi@student.42.fr>            +#+  +:+       +#+        //
 //                                                +#+#+#+#+#+   +#+           //
 //   Created: 2015/01/10 18:26:15 by mdrissi           #+#    #+#             //
-//   Updated: 2015/01/11 03:09:27 by mle-roy          ###   ########.fr       //
+//   Updated: 2015/01/11 04:12:43 by mle-roy          ###   ########.fr       //
 //                                                                            //
 // ************************************************************************** //
 
@@ -15,17 +15,20 @@
 
 Obstacle::Obstacle(void)
 {
+	this->_planNextPlay();
 	return ;
 }
 
 Obstacle::Obstacle(coord pos, char c, int typeob, int maxY, int maxX)
 	: GameEntity(1, pos, c, 3, maxY, maxX, DOWN), _typeob(typeob)
 {
+	this->_planNextPlay();
 	return ;
 }
 
 Obstacle::Obstacle(Obstacle const & rf) : GameEntity()
 {
+	this->_planNextPlay();
 	*this = rf;
 	return ;
 }

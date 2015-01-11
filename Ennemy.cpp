@@ -6,7 +6,7 @@
 //   By: mdrissi <mdrissi@student.42.fr>            +#+  +:+       +#+        //
 //                                                +#+#+#+#+#+   +#+           //
 //   Created: 2015/01/10 20:03:57 by mdrissi           #+#    #+#             //
-//   Updated: 2015/01/11 02:46:12 by mle-roy          ###   ########.fr       //
+//   Updated: 2015/01/11 04:13:35 by mle-roy          ###   ########.fr       //
 //                                                                            //
 // ************************************************************************** //
 
@@ -18,6 +18,7 @@
 
 Ennemy::Ennemy( void )
 {
+	this->_planNextPlay();
 	this->_tir = '|';
 	return ;
 }
@@ -25,12 +26,14 @@ Ennemy::Ennemy( void )
 Ennemy::Ennemy(coord pos, int id, char c, int maxY, int maxX)
 	: GameEntity(1, pos, c, 1, maxY, maxX, DOWN), _id(id)
 {
+	this->_planNextPlay();
 	this->_tir = '|';
 	return ;
 }
 
 Ennemy::Ennemy(Ennemy const & rf) : GameEntity()
 {
+	this->_planNextPlay();
 	this->_tir = '|';
 	*this = rf;
 }

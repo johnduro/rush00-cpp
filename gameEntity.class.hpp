@@ -6,7 +6,7 @@
 //   By: mle-roy <mle-roy@student.42.fr>            +#+  +:+       +#+        //
 //                                                +#+#+#+#+#+   +#+           //
 //   Created: 2015/01/10 16:05:28 by mle-roy           #+#    #+#             //
-//   Updated: 2015/01/11 03:06:30 by mle-roy          ###   ########.fr       //
+//   Updated: 2015/01/11 03:44:18 by mle-roy          ###   ########.fr       //
 //                                                                            //
 // ************************************************************************** //
 
@@ -38,9 +38,9 @@ public:
 
 	void	move(int dir, int maxY, int maxX);
 	GameEntity	& operator=(GameEntity const & rf);
-	virtual	int		play( void );
-	virtual	struct timeval		getPlayTime( void );
-	virtual	char	getTir( void ) const;
+	virtual	int		play( void ) = 0;
+	virtual	struct timeval		getPlayTime( void ) const = 0;
+	virtual	char	getTir( void ) const = 0;
 
 	int		getDirection( void ) const;
 

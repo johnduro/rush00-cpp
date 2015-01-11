@@ -6,27 +6,29 @@
 //   By: mle-roy <mle-roy@student.42.fr>            +#+  +:+       +#+        //
 //                                                +#+#+#+#+#+   +#+           //
 //   Created: 2015/01/10 16:05:31 by mle-roy           #+#    #+#             //
-//   Updated: 2015/01/11 03:12:14 by mle-roy          ###   ########.fr       //
+//   Updated: 2015/01/11 04:18:14 by mle-roy          ###   ########.fr       //
 //                                                                            //
 // ************************************************************************** //
 
 #include <sys/time.h>
 #include <cstdlib>
+#include "Player.hpp"
 #include "gameManager.class.hpp"
 #include "defines.hpp"
 
 // ** CANONICAL ** //
 gameManager::gameManager( void )
 {
-	coord		coord;
+	// coord		coord;
 
-	coord.x = this->_maxX / 2;
-	coord.y = this->_maxY - 2;
+	// coord.x = this->_maxX / 2;
+	// coord.y = this->_maxY - 2;
 	this->_isInit = false;
 	this->_entities = new t_list;
 	this->_entities->start = NULL;
 	this->_entities->end = NULL;
-	this->_player = new Player(coord, "Player", 5, 'M', 0, this->_maxY, this->_maxX);
+	this->_player = NULL;
+	// this->_player = new Player(coord, "Player", 5, 'M', 0, this->_maxY, this->_maxX);
 }
 
 gameManager::gameManager( gameManager const & src )
@@ -125,6 +127,7 @@ void					gameManager::_addEntity(GameEntity* newEntity, int owner)
 	{
 		node->prev = this->_entities->end;
 		this->_entities->end->next = node;
+		this->_entities->end = node;
 	}
 }
 
@@ -332,7 +335,7 @@ void					gameManager::_planNextGen( void )
 	timeradd(&cur, &add, &(this->_nextGen));
 }
 
-static bool				gameManager::isTimeYet(struct timeval ok)
+bool				gameManager::isTimeYet(struct timeval ok)
 {
 	struct timeval		time;
 
@@ -369,6 +372,10 @@ void				gameManager::_addClonedEntity(t_list *newL, t_entity *newE) const
 // ** PUBLIC FUNCTION **//
 void					gameManager::init( void )
 {
+	coord	coord;
+	int		maxY;
+	int		maxX;
+
 	//initialisation ncurses
 	initscr();
 	clear();
@@ -382,12 +389,16 @@ void					gameManager::init( void )
 	init_pair(RED, COLOR_RED, COLOR_BLACK);
 	init_pair(YELLOW, COLOR_YELLOW, COLOR_BLACK);
 	init_pair(MAGENTA, COLOR_MAGENTA, COLOR_BLACK);
-	getmaxyx(stdscr, this->_maxY, this->_maxX);
-	this->_field = newwin(this->_maxY - this->_scoreSize, this->_maxX, 0, 0);
-	this->_score = newwin(this->_scoreSize, this->_maxX, this->_maxY - this->_scoreSize, 0);
+	getmaxyx(stdscr, maxY, maxX);
+	this->_field = newwin(maxY - this->_scoreSize, maxX, 0, 0);
+	this->_score = newwin(this->_scoreSize, maxX, maxY - this->_scoreSize, 0);
+	getmaxyx(this->_field, this->_maxY, this->_maxX);
 	mvwprintw(this->_field, 0, 0, "Field");
 	mvwprintw(this->_score, 0, 0, "Score");
 	this->_refresh();
+	coord.x = this->_maxX / 2;
+	coord.y = this->_maxY - 2;
+	this->_player = new Player(coord, "Player", 5, 'M', 0, this->_maxY, this->_maxX);
 	this->_isInit = true;
 }
 
@@ -406,6 +417,7 @@ void					gameManager::loop( void )
 		}
 		if (this->_makeGame())
 			return ;
+		clear();
 		this->_printScreenField();
 		this->_printScreenScore();
 		this->_refresh();
@@ -424,7 +436,8 @@ t_list*					gameManager::cloneEntities( void ) const
 	while (ptr)
 	{
 		newE = new t_entity;
-		newE->entity = new GameEntity(*(ptr->entity));
+		// newE->entity = new GameEntity(*(ptr->entity));
+		newE->entity = ptr->entity;
 		newE->prev = NULL;
 		newE->next = NULL;
 		this->_addClonedEntity(newL, newE);

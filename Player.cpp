@@ -6,7 +6,7 @@
 //   By: mdrissi <mdrissi@student.42.fr>            +#+  +:+       +#+        //
 //                                                +#+#+#+#+#+   +#+           //
 //   Created: 2015/01/10 19:02:19 by mdrissi           #+#    #+#             //
-//   Updated: 2015/01/11 02:52:26 by mle-roy          ###   ########.fr       //
+//   Updated: 2015/01/11 03:51:36 by mle-roy          ###   ########.fr       //
 //                                                                            //
 // ************************************************************************** //
 
@@ -31,6 +31,11 @@ Player::Player(Player const & rf) : GameEntity()
 {
 	this->_tir = '|';
 	*this = rf;
+	return ;
+}
+
+Player::~Player( void )
+{
 	return ;
 }
 

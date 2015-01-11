@@ -6,7 +6,7 @@
 //   By: mdrissi <mdrissi@student.42.fr>            +#+  +:+       +#+        //
 //                                                +#+#+#+#+#+   +#+           //
 //   Created: 2015/01/10 17:40:14 by mdrissi           #+#    #+#             //
-//   Updated: 2015/01/11 03:07:24 by mle-roy          ###   ########.fr       //
+//   Updated: 2015/01/11 03:45:12 by mle-roy          ###   ########.fr       //
 //                                                                            //
 // ************************************************************************** //
 
@@ -32,7 +32,7 @@ public:
 	void	set_dir(int const dir);
 	int		play( void );
 	Tir & operator=(Tir const & rf);
-	struct timeval		getPlayTime( void );
+	struct timeval		getPlayTime( void ) const;
 	char	getTir( void ) const;
 
 private:

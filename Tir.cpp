@@ -6,7 +6,7 @@
 //   By: mdrissi <mdrissi@student.42.fr>            +#+  +:+       +#+        //
 //                                                +#+#+#+#+#+   +#+           //
 //   Created: 2015/01/10 18:47:49 by mdrissi           #+#    #+#             //
-//   Updated: 2015/01/11 03:08:16 by mle-roy          ###   ########.fr       //
+//   Updated: 2015/01/11 03:45:48 by mle-roy          ###   ########.fr       //
 //                                                                            //
 // ************************************************************************** //
 
@@ -96,4 +96,9 @@ Tir &	Tir::operator=(Tir const & rf)
 char	Tir::getTir( void ) const
 {
 	return (this->_typetir);
+}
+
+struct timeval		Tir::getPlayTime( void ) const
+{
+	return (this->_play);
 }
