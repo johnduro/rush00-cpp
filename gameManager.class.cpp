@@ -6,7 +6,7 @@
 //   By: mle-roy <mle-roy@student.42.fr>            +#+  +:+       +#+        //
 //                                                +#+#+#+#+#+   +#+           //
 //   Created: 2015/01/10 16:05:31 by mle-roy           #+#    #+#             //
-//   Updated: 2015/01/11 07:40:02 by mle-roy          ###   ########.fr       //
+//   Updated: 2015/01/11 10:02:15 by mle-roy          ###   ########.fr       //
 //                                                                            //
 // ************************************************************************** //
 
@@ -231,14 +231,12 @@ void				gameManager::_printScreenField( void )
 	t_entity		*ptr;
 	coord			coord;
 
-	// int				colorPair;
-	// int				type;
+	int				colorPair;
+	int				type;
 	// char			c;
 	// coord			p;
 	// int mvwaddch(WINDOW *win, int y, int x, const chtype ch);
 	ptr = this->_entities->start;
-	this->_drawBorders(this->_field);
-	this->_drawBorders(this->_score);
 	// p = this->_player->getPrevious();
 	// attron(COLOR_PAIR(YELLOW));
 	// wbkgd(this->_field, COLOR_PAIR(YELLOW));
@@ -249,24 +247,26 @@ void				gameManager::_printScreenField( void )
 	// mvwprintw(this->_field, coord.y, coord.x, " ");
 	mvwaddch(this->_field, coord.y, coord.x, ' ');
 	coord = this->_player->getCoord();
-	mvwaddch(this->_field, coord.y, coord.x, this->_player->get_c());
+	mvwaddch(this->_field, coord.y, coord.x, this->_player->get_c() | COLOR_PAIR(YELLOW));
 	// mvwprintw(this->_field, coord.y, coord.x, &c);
 
 	// wbkgd(this->_field, COLOR_PAIR(WHITE));
 	// attroff(COLOR_PAIR(YELLOW));
 	while (ptr)
 	{
-		// type = ptr->entity->get_type();
+		type = ptr->entity->get_type();
 		// p = ptr->entity->getPrevious();
-		// if (type == TIR)
-		// {
-		// 	if (ptr->owner == COMPUTER)
-		// 		colorPair = RED;
-		// 	else
-		// 		colorPair = MAGENTA;
-		// }
-		// else if (type == ENNEMY || type == OBSTACLE)
-		// 	colorPair = WHITE;
+		if (type == TIR)
+		{
+			if (ptr->owner == COMPUTER)
+				colorPair = RED;
+			else
+				colorPair = MAGENTA;
+		}
+		else if (type == ENNEMY)
+			colorPair = GREEN;
+		else
+			colorPair = WHITE;
 		// wbkgd(this->_field, COLOR_PAIR(colorPair));
 		// attron(COLOR_PAIR(colorPair));
 		// c = ptr->entity->get_c();
@@ -276,7 +276,7 @@ void				gameManager::_printScreenField( void )
 		mvwaddch(this->_field, coord.y, coord.x, ' ');
  		// mvwprintw(this->_field, coord.y, coord.x, " ");
 		coord = ptr->entity->getCoord();
-		mvwaddch(this->_field, coord.y, coord.x, ptr->entity->get_c());
+		mvwaddch(this->_field, coord.y, coord.x, ptr->entity->get_c() | COLOR_PAIR(colorPair));
  		// mvwprintw(this->_field, coord.y, coord.x, &c);
 
 		// wbkgd(this->_field, COLOR_PAIR(WHITE));
@@ -421,7 +421,6 @@ void					gameManager::_playLoop( void )
 {
 	t_entity			*ptr;
 
-	this->debug(">>> IN PLAY LOOP");
 	ptr = this->_entities->start;
 	while (ptr)
 	{
@@ -432,7 +431,6 @@ void					gameManager::_playLoop( void )
 		}
 		ptr = ptr->next;
 	}
-	this->debug(">>> OUT PLAY LOOP");
 }
 
 void					gameManager::_planNextGen( void )
@@ -479,13 +477,38 @@ void				gameManager::_addClonedEntity(t_list *newL, t_entity *newE) const
 	}
 }
 
+void				gameManager::_checkResize( void )
+{
+	int			max_y;
+	int			max_x;
+	t_entity	*ptr;
+
+	getmaxyx(stdscr, max_y, max_x);
+	if (this->_maxWinY != max_y || this->_maxWinX != max_x)
+	{
+		clear();
+		this->_maxWinY = max_y;
+		this->_maxWinX = max_x;
+		wresize(this->_field, this->_maxWinY - this->_scoreSize, this->_maxWinX);
+		wresize(this->_score, this->_scoreSize, this->_maxWinX);
+		ptr = this->_entities->start;
+		while (ptr)
+		{
+			ptr->entity->changeSize(this->_maxWinY, this->_maxWinX);
+			ptr = ptr->next;
+		}
+		this->_drawBorders(this->_field);
+		this->_drawBorders(this->_score);
+		this->_printScreenField();
+		this->_refresh();
+	}
+}
+
 
 // ** PUBLIC FUNCTION **//
 void					gameManager::init( void )
 {
 	coord	coord;
-	int		maxY;
-	int		maxX;
 
 	//initialisation ncurses
 	initscr();
@@ -500,16 +523,19 @@ void					gameManager::init( void )
 	init_pair(RED, COLOR_RED, COLOR_BLACK);
 	init_pair(YELLOW, COLOR_YELLOW, COLOR_BLACK);
 	init_pair(MAGENTA, COLOR_MAGENTA, COLOR_BLACK);
-	getmaxyx(stdscr, maxY, maxX);
-	this->_field = newwin(maxY - this->_scoreSize, maxX, 0, 0);
-	this->_score = newwin(this->_scoreSize, maxX, maxY - this->_scoreSize, 0);
+	init_pair(GREEN, COLOR_GREEN, COLOR_BLACK);
+	init_pair(BW, COLOR_BLACK, COLOR_WHITE);
+	getmaxyx(stdscr, this->_maxWinY, this->_maxWinX);
+	this->_field = newwin(this->_maxWinY - this->_scoreSize, this->_maxWinX, 0, 0);
+	this->_score = newwin(this->_scoreSize, this->_maxWinX, this->_maxWinY - this->_scoreSize, 0);
 	getmaxyx(this->_field, this->_maxY, this->_maxX);
-	// mvwprintw(this->_field, 0, 0, "Field");
-	// mvwprintw(this->_score, 0, 0, "Score");
 	this->_refresh();
 	coord.x = this->_maxX / 2;
 	coord.y = this->_maxY - 2;
 	this->_player = new Player(coord, "Player", 5, PLAYER_SPRITE, 0, this->_maxY, this->_maxX);
+	this->_drawBorders(this->_field);
+	this->_drawBorders(this->_score);
+	wbkgd(this->_score, COLOR_PAIR(BW));
 	this->_isInit = true;
 }
 
@@ -521,6 +547,7 @@ void					gameManager::loop( void )
 	while (42)
 	{
 		this->debug("IN -----___LOOOPALOOP");
+		this->_checkResize();
 		input = getch();
 		if (input >= 0)
 		{
@@ -529,7 +556,6 @@ void					gameManager::loop( void )
 		}
 		if (this->_makeGame())
 			return ;
-//		clear();
 		this->debug("IN ----- PRINTSCREEN");
 		this->_printScreenField();
 		this->debug(" OUT SCREEN || IN SCORE");

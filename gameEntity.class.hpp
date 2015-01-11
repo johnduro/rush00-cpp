@@ -6,7 +6,7 @@
 //   By: mle-roy <mle-roy@student.42.fr>            +#+  +:+       +#+        //
 //                                                +#+#+#+#+#+   +#+           //
 //   Created: 2015/01/10 16:05:28 by mle-roy           #+#    #+#             //
-//   Updated: 2015/01/11 05:42:53 by mle-roy          ###   ########.fr       //
+//   Updated: 2015/01/11 08:44:09 by mle-roy          ###   ########.fr       //
 //                                                                            //
 // ************************************************************************** //
 
@@ -44,6 +44,7 @@ public:
 	virtual	char	getTir( void ) const = 0;
 
 	int		getDirection( void ) const;
+	void	changeSize(int y, int x);
 
 protected:
 

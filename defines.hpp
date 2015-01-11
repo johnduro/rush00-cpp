@@ -6,7 +6,7 @@
 //   By: mle-roy <mle-roy@student.42.fr>            +#+  +:+       +#+        //
 //                                                +#+#+#+#+#+   +#+           //
 //   Created: 2015/01/10 18:30:03 by mle-roy           #+#    #+#             //
-//   Updated: 2015/01/11 07:26:48 by mle-roy          ###   ########.fr       //
+//   Updated: 2015/01/11 09:58:17 by mle-roy          ###   ########.fr       //
 //                                                                            //
 // ************************************************************************** //
 
@@ -35,6 +35,8 @@ struct	coord{
 # define RED 2
 # define YELLOW 3
 # define MAGENTA 4
+# define GREEN 5
+# define BW 6
 # define RESPAWN_TIME 4
 # define PLAY_TIME 1
 # define FIRE_TIME 8000000
@@ -42,6 +44,8 @@ struct	coord{
 # define FIRE_MOVE_TIME 250000
 # define ENNEMY_SCORE 1000
 # define OBSTACLE_SCORE 15
+# define MAX_ENNEMY 20
+# define MAX_TIR 50
 # define PLAYER_SPRITE 'A'
 
 #endif // ** DEFINES_HPP ** //

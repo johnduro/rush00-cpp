@@ -6,7 +6,7 @@
 //   By: mle-roy <mle-roy@student.42.fr>            +#+  +:+       +#+        //
 //                                                +#+#+#+#+#+   +#+           //
 //   Created: 2015/01/10 16:05:24 by mle-roy           #+#    #+#             //
-//   Updated: 2015/01/11 06:33:43 by mle-roy          ###   ########.fr       //
+//   Updated: 2015/01/11 09:26:33 by mle-roy          ###   ########.fr       //
 //                                                                            //
 // ************************************************************************** //
 
@@ -45,20 +45,20 @@ class gameManager
 private :
 	// ** PRIVATE ATTRIBUTES ** //
 	static int const	_scoreSize = 3;
-	static int const	_maxEnnemy = 20;
-	static int const	_maxTir = 50;
+	static int const	_maxEnnemy = MAX_ENNEMY;
+	static int const	_maxTir = MAX_TIR;
 	bool				_isInit;
 	t_list				*_entities;
 	Player				*_player;
 	int					_maxY;
 	int					_maxX;
+	int					_maxWinY;
+	int					_maxWinX;
 	WINDOW				*_field;
 	WINDOW				*_score;
 	struct timeval		_nextGen;
 	int					_ennemy;
 	int					_tir;
-	// std::ofstream		myOut;
-//	struct timeval		_nextPrint;
 
 	// ** PRIVATE FUNCTION ** //
 	void				_refresh( void );
@@ -77,6 +77,7 @@ private :
 	void				_playLoop( void );
 	void				_planNextGen( void );
 	void				_addClonedEntity(t_list *newL, t_entity *newE) const;
+	void				_checkResize( void );
 
 public :
 	// ** CANONICAL ** //

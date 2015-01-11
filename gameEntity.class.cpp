@@ -6,7 +6,7 @@
 //   By: mle-roy <mle-roy@student.42.fr>            +#+  +:+       +#+        //
 //                                                +#+#+#+#+#+   +#+           //
 //   Created: 2015/01/10 16:05:34 by mle-roy           #+#    #+#             //
-//   Updated: 2015/01/11 07:12:33 by mle-roy          ###   ########.fr       //
+//   Updated: 2015/01/11 09:06:42 by mle-roy          ###   ########.fr       //
 //                                                                            //
 // ************************************************************************** //
 
@@ -136,4 +136,12 @@ GameEntity	& GameEntity::operator=(GameEntity const & rf)
 int		GameEntity::getDirection( void ) const
 {
 	return (this->_dir);
+}
+
+void	GameEntity::changeSize(int y, int x)
+{
+	this->_maxY = y;
+	this->_maxX = x;
+	if (this->_pos.x >= this->_maxX || this->_pos.y >= this->_maxY)
+		this->_alive = false;
 }
