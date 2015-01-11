@@ -6,7 +6,7 @@
 //   By: mle-roy <mle-roy@student.42.fr>            +#+  +:+       +#+        //
 //                                                +#+#+#+#+#+   +#+           //
 //   Created: 2015/01/10 16:05:31 by mle-roy           #+#    #+#             //
-//   Updated: 2015/01/11 04:31:44 by mle-roy          ###   ########.fr       //
+//   Updated: 2015/01/11 04:55:49 by mdrissi          ###   ########.fr       //
 //                                                                            //
 // ************************************************************************** //
 
@@ -16,6 +16,14 @@
 #include "Player.hpp"
 #include "gameManager.class.hpp"
 #include "defines.hpp"
+#include <fstream>
+
+void	gameManager::debug(std::string msg)
+{
+	std::ofstream ifout("log.debug", std::ifstream::out);
+	ifout << msg << std::endl;
+	ifout.close();
+}
 
 // ** CANONICAL ** //
 gameManager::gameManager( void )
@@ -412,7 +420,7 @@ void					gameManager::loop( void )
 	int		input;
 
 	this->_planNextGen();
-	printf("YLO TEST HOH\n");
+	this->debug("YLO TEST HOH");
 	while (42)
 	{
 		input = getch();

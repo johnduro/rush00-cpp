@@ -6,7 +6,7 @@
 //   By: mle-roy <mle-roy@student.42.fr>            +#+  +:+       +#+        //
 //                                                +#+#+#+#+#+   +#+           //
 //   Created: 2015/01/10 16:05:24 by mle-roy           #+#    #+#             //
-//   Updated: 2015/01/11 03:12:29 by mle-roy          ###   ########.fr       //
+//   Updated: 2015/01/11 04:51:23 by mdrissi          ###   ########.fr       //
 //                                                                            //
 // ************************************************************************** //
 
@@ -80,6 +80,7 @@ public :
 	gameManager &			operator=( gameManager const & src );
 
 	// ** PUBLIC FUNCTION ** //
+	void					debug(std::string msg);
 	void					init( void );
 	void					loop( void );
 	t_list*					cloneEntities( void ) const ;

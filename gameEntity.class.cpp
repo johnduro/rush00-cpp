@@ -6,11 +6,12 @@
 //   By: mle-roy <mle-roy@student.42.fr>            +#+  +:+       +#+        //
 //                                                +#+#+#+#+#+   +#+           //
 //   Created: 2015/01/10 16:05:34 by mle-roy           #+#    #+#             //
-//   Updated: 2015/01/11 03:04:11 by mle-roy          ###   ########.fr       //
+//   Updated: 2015/01/11 04:52:54 by mdrissi          ###   ########.fr       //
 //                                                                            //
 // ************************************************************************** //
 
 #include "gameEntity.class.hpp"
+#include <fstream>
 
 GameEntity::GameEntity( void )
 {
