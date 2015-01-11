@@ -6,12 +6,13 @@
 //   By: mle-roy <mle-roy@student.42.fr>            +#+  +:+       +#+        //
 //                                                +#+#+#+#+#+   +#+           //
 //   Created: 2015/01/10 16:05:31 by mle-roy           #+#    #+#             //
-//   Updated: 2015/01/11 04:18:14 by mle-roy          ###   ########.fr       //
+//   Updated: 2015/01/11 04:31:44 by mle-roy          ###   ########.fr       //
 //                                                                            //
 // ************************************************************************** //
 
 #include <sys/time.h>
 #include <cstdlib>
+#include <stdio.h> //enlever
 #include "Player.hpp"
 #include "gameManager.class.hpp"
 #include "defines.hpp"
@@ -220,7 +221,7 @@ void				gameManager::_printScreenField( void )
 
 void				gameManager::_printScreenScore( void )
 {
-	mvwprintw(this->_score, 1, 1, this->_player->getScore());
+	// mvwprintw(this->_score, 1, 1, this->_player->getScore());
 }
 
 void				gameManager::_generateEnemy( void )
@@ -231,19 +232,23 @@ void				gameManager::_generateEnemy( void )
 	GameEntity*		newE;
 	coord			coord;
 
-	nbEnemy = rand() % 4;
-	nbObs = rand() % 2;
+	// nbEnemy = rand() % 4;
+	// nbObs = rand() % 2;
+	nbEnemy = 1;
+	nbObs = 1;
 	for (i = 0; i < nbEnemy; i++)
 	{
-		coord.y = 1;
-		coord.x = rand() % this->_maxX;;
+		coord.y = 3;
+		// coord.x = rand() % this->_maxX;
+		coord.x = 10;
 		newE = new Ennemy(coord, ENNEMY,  'Y', this->_maxY, this->_maxX);
 		this->_addEntity(newE, COMPUTER);
 	}
 	for (i = 0; i < nbObs; i++)
 	{
-		coord.y = 1;
-		coord.x = rand() % this->_maxX;;
+		coord.y = 2;
+		// coord.x = rand() % this->_maxX;;
+		coord.x = 20;
 		newE = new Obstacle(coord, 'O', 1, this->_maxY, this->_maxX);
 		this->_addEntity(newE, COMPUTER);
 	}
@@ -407,6 +412,7 @@ void					gameManager::loop( void )
 	int		input;
 
 	this->_planNextGen();
+	printf("YLO TEST HOH\n");
 	while (42)
 	{
 		input = getch();
