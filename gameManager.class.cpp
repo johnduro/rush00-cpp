@@ -6,7 +6,7 @@
 //   By: mle-roy <mle-roy@student.42.fr>            +#+  +:+       +#+        //
 //                                                +#+#+#+#+#+   +#+           //
 //   Created: 2015/01/10 16:05:31 by mle-roy           #+#    #+#             //
-//   Updated: 2015/01/11 04:55:49 by mdrissi          ###   ########.fr       //
+//   Updated: 2015/01/11 06:11:21 by mle-roy          ###   ########.fr       //
 //                                                                            //
 // ************************************************************************** //
 
@@ -20,7 +20,7 @@
 
 void	gameManager::debug(std::string msg)
 {
-	std::ofstream ifout("log.debug", std::ifstream::out);
+	std::ofstream ifout("log.debug", std::ifstream::app);
 	ifout << msg << std::endl;
 	ifout.close();
 }
@@ -182,11 +182,17 @@ void				gameManager::_addShoot( coord coord, int direction, char print, int owne
 int				gameManager::_makeGame( void )
 {
 //	this->_scrollDown();//??
+	this->debug("-- IN MAKE GAME");
+
 	this->_playLoop();
 	if (this->_checkForDead())
+	{
+		this->debug("<< OUT MAKE GAME 1");
 		return (1);
+	}
 	if (this->isTimeYet(this->_nextGen))
 		this->_generateEnemy();
+	this->debug("<< OUT MAKE GAME");
 	return (0);
 }
 
@@ -194,35 +200,57 @@ void				gameManager::_printScreenField( void )
 {
 	t_entity		*ptr;
 	coord			coord;
-	int				colorPair;
-	int				type;
-	char			c;
 
+	// int				colorPair;
+	// int				type;
+	// char			c;
+	// coord			p;
+	// int mvwaddch(WINDOW *win, int y, int x, const chtype ch);
 	ptr = this->_entities->start;
 	this->_drawBorders(this->_field);
 	this->_drawBorders(this->_score);
+	// p = this->_player->getPrevious();
+	// attron(COLOR_PAIR(YELLOW));
+	// wbkgd(this->_field, COLOR_PAIR(YELLOW));
+	// c = this->_player->get_c();
+	// mvwprintw(this->_field, p.y, p.x, " ");
+
+	coord = this->_player->getPrevious();
+	// mvwprintw(this->_field, coord.y, coord.x, " ");
+	mvwaddch(this->_field, coord.y, coord.x, ' ');
 	coord = this->_player->getCoord();
-	attron(COLOR_PAIR(YELLOW));
-	c = this->_player->get_c();
-	mvwprintw(this->_field, coord.y, coord.x, &c);
-	attroff(COLOR_PAIR(YELLOW));
+	mvwaddch(this->_field, coord.y, coord.x, this->_player->get_c());
+	// mvwprintw(this->_field, coord.y, coord.x, &c);
+
+	// wbkgd(this->_field, COLOR_PAIR(WHITE));
+	// attroff(COLOR_PAIR(YELLOW));
 	while (ptr)
 	{
-		type = ptr->entity->get_type();
+		// type = ptr->entity->get_type();
+		// p = ptr->entity->getPrevious();
+		// if (type == TIR)
+		// {
+		// 	if (ptr->owner == COMPUTER)
+		// 		colorPair = RED;
+		// 	else
+		// 		colorPair = MAGENTA;
+		// }
+		// else if (type == ENNEMY || type == OBSTACLE)
+		// 	colorPair = WHITE;
+		// wbkgd(this->_field, COLOR_PAIR(colorPair));
+		// attron(COLOR_PAIR(colorPair));
+		// c = ptr->entity->get_c();
+		// mvwprintw(this->_field, p.y, p.x, " ");
+
+		coord = ptr->entity->getPrevious();
+		mvwaddch(this->_field, coord.y, coord.x, ' ');
+ 		// mvwprintw(this->_field, coord.y, coord.x, " ");
 		coord = ptr->entity->getCoord();
-		if (type == TIR)
-		{
-			if (ptr->owner == COMPUTER)
-				colorPair = RED;
-			else
-				colorPair = MAGENTA;
-		}
-		else if (type == ENNEMY || type == OBSTACLE)
-			colorPair = WHITE;
-		attron(COLOR_PAIR(colorPair));
-		c = ptr->entity->get_c();
- 		mvwprintw(this->_field, coord.y, coord.x, &c);
-		attroff(COLOR_PAIR(colorPair));
+		mvwaddch(this->_field, coord.y, coord.x, ptr->entity->get_c());
+ 		// mvwprintw(this->_field, coord.y, coord.x, &c);
+
+		// wbkgd(this->_field, COLOR_PAIR(WHITE));
+		// attroff(COLOR_PAIR(colorPair));
 		ptr = ptr->next;
 	}
 }
@@ -240,6 +268,7 @@ void				gameManager::_generateEnemy( void )
 	GameEntity*		newE;
 	coord			coord;
 
+	this->debug("::::::::: IN GENERATE ENNEMY");
 	// nbEnemy = rand() % 4;
 	// nbObs = rand() % 2;
 	nbEnemy = 1;
@@ -261,6 +290,7 @@ void				gameManager::_generateEnemy( void )
 		this->_addEntity(newE, COMPUTER);
 	}
 	this->_planNextGen();
+	this->debug("::::::::: OUT GENERATE ENNEMY");
 }
 
 // void				gameManager::_scrollDown( void )
@@ -282,13 +312,23 @@ int					gameManager::_checkForDead( void )
 	t_entity		*keep;
 	t_entity		*other;
 	coord			coord;
+	// coord			coord_2;
 
+	this->debug("|||||||||||| IN CHECK DEAD");
 	ptr = this->_entities->start;
 	while (ptr)
 	{
+		this->debug("|||||||||||| DAT 1 LOOP");
 		keep = ptr->next;
 		if (!ptr->entity->getAlive())
 		{
+			this->debug("|||||||||||| CHECK DEAD 111111");
+
+			coord = ptr->entity->getPrevious();
+			mvwaddch(this->_field, coord.y, coord.x, ' ');
+			coord = ptr->entity->getCoord();
+			mvwaddch(this->_field, coord.y, coord.x, ' ');
+
 			this->_removeEntity(ptr);
 			ptr = keep;
 			continue ;
@@ -297,27 +337,46 @@ int					gameManager::_checkForDead( void )
 		coord = ptr->entity->getCoord();
 		while (other)
 		{
+			this->debug("|||||||||||| DAT 2 LOOP");
 			if (ptr != other)
 			{
-				if (other->entity->isHurt(coord))
+				if (other->entity->isHurt(ptr->entity->getCoord()))
 				{
 					if (other == keep)
 						keep = other->next;
+
+					coord = ptr->entity->getPrevious();
+					mvwaddch(this->_field, coord.y, coord.x, ' ');
+					coord = ptr->entity->getCoord();
+					mvwaddch(this->_field, coord.y, coord.x, ' ');
 					this->_removeEntity(ptr);
+
+					coord = other->entity->getPrevious();
+					mvwaddch(this->_field, coord.y, coord.x, ' ');
+					coord = other->entity->getCoord();
+					mvwaddch(this->_field, coord.y, coord.x, ' ');
 					this->_removeEntity(other);
 					break ;
 				}
 			}
+			other = other->next;
 		}
 		ptr = keep;
 	}
+	this->debug("|||||||||||| CHECK DEAD 2222222222");
 	ptr = this->_entities->start;
 	coord = this->_player->getCoord();
 	while (ptr)
 	{
+		this->debug("|||||||||||| DAT 3 LOOP");
 		if (ptr->entity->isHurt(coord))
+		{
+			this->debug("|||||||||||| OUT CHECK DEAD 1");
 			return (1);
+		}
+		ptr = ptr->next;
 	}
+	this->debug("|||||||||||| OUT CHECK DEAD");
 	return (0);
 }
 
@@ -325,6 +384,7 @@ void					gameManager::_playLoop( void )
 {
 	t_entity			*ptr;
 
+	this->debug(">>> IN PLAY LOOP");
 	ptr = this->_entities->start;
 	while (ptr)
 	{
@@ -335,6 +395,7 @@ void					gameManager::_playLoop( void )
 		}
 		ptr = ptr->next;
 	}
+	this->debug(">>> OUT PLAY LOOP");
 }
 
 void					gameManager::_planNextGen( void )
@@ -406,8 +467,8 @@ void					gameManager::init( void )
 	this->_field = newwin(maxY - this->_scoreSize, maxX, 0, 0);
 	this->_score = newwin(this->_scoreSize, maxX, maxY - this->_scoreSize, 0);
 	getmaxyx(this->_field, this->_maxY, this->_maxX);
-	mvwprintw(this->_field, 0, 0, "Field");
-	mvwprintw(this->_score, 0, 0, "Score");
+	// mvwprintw(this->_field, 0, 0, "Field");
+	// mvwprintw(this->_score, 0, 0, "Score");
 	this->_refresh();
 	coord.x = this->_maxX / 2;
 	coord.y = this->_maxY - 2;
@@ -420,7 +481,6 @@ void					gameManager::loop( void )
 	int		input;
 
 	this->_planNextGen();
-	this->debug("YLO TEST HOH");
 	while (42)
 	{
 		input = getch();
@@ -431,7 +491,7 @@ void					gameManager::loop( void )
 		}
 		if (this->_makeGame())
 			return ;
-		clear();
+//		clear();
 		this->_printScreenField();
 		this->_printScreenScore();
 		this->_refresh();

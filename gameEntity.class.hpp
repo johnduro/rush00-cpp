@@ -6,7 +6,7 @@
 //   By: mle-roy <mle-roy@student.42.fr>            +#+  +:+       +#+        //
 //                                                +#+#+#+#+#+   +#+           //
 //   Created: 2015/01/10 16:05:28 by mle-roy           #+#    #+#             //
-//   Updated: 2015/01/11 03:44:18 by mle-roy          ###   ########.fr       //
+//   Updated: 2015/01/11 05:42:53 by mle-roy          ###   ########.fr       //
 //                                                                            //
 // ************************************************************************** //
 
@@ -26,6 +26,7 @@ public:
 	virtual ~GameEntity( void );
 
 	coord	getCoord( void ) const;
+	coord	getPrevious( void ) const;
 	bool	getAlive( void ) const;
 	bool	isHurt( coord coord ) const;
 	char	get_c( void ) const;
@@ -53,6 +54,7 @@ protected:
 	int			_maxY;
 	int			_maxX;
 	int			_dir;
+	coord		_previous;
 
 };
 

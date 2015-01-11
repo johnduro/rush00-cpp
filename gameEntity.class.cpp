@@ -6,7 +6,7 @@
 //   By: mle-roy <mle-roy@student.42.fr>            +#+  +:+       +#+        //
 //                                                +#+#+#+#+#+   +#+           //
 //   Created: 2015/01/10 16:05:34 by mle-roy           #+#    #+#             //
-//   Updated: 2015/01/11 04:52:54 by mdrissi          ###   ########.fr       //
+//   Updated: 2015/01/11 06:31:21 by mle-roy          ###   ########.fr       //
 //                                                                            //
 // ************************************************************************** //
 
@@ -19,7 +19,7 @@ GameEntity::GameEntity( void )
 }
 
 GameEntity::GameEntity(bool alive, coord pos, char c, int type, int maxY, int maxX, int dir)
-	: _alive(alive), _pos(pos), _c(c), _type(type), _maxY(maxY), _maxX(maxX), _dir(dir)
+	: _alive(alive), _pos(pos), _c(c), _type(type), _maxY(maxY), _maxX(maxX), _dir(dir), _previous(pos)
 {
 	return ;
 }
@@ -38,6 +38,11 @@ GameEntity::~GameEntity( void )
 coord	GameEntity::getCoord( void ) const
 {
 	return (this->_pos);
+}
+
+coord	GameEntity::getPrevious( void ) const
+{
+	return (this->_previous);
 }
 
 bool	GameEntity::getAlive( void ) const
@@ -93,14 +98,26 @@ void	GameEntity::move(int dir, int maxY, int maxX)
 	tmp.x = this->_pos.x;
 	tmp.y = this->_pos.y;
 
-	if ((dir == UP) && ((tmp.y - 1) >= 0))
-		tmp.y--;
-	else if ((dir == DOWN) && ((tmp.y + 1) < maxY))
-		tmp.y++;
+	if (dir == UP )
+	{
+		if ((tmp.y - 1) >= 1)
+			tmp.y--;
+		else
+			this->_alive = false;
+	}
+	else if (dir == DOWN)
+	{
+		if ((tmp.y + 1) < (maxY - 1))
+			tmp.y++;
+		else
+			this->_alive = false;
+	}
 	else if ((dir == LEFT) && ((tmp.x - 1) >= 0))
 		tmp.x--;
 	else if ((dir == RIGHT) && ((tmp.x + 1) <= maxX))
 		tmp.x++;
+	this->_previous.x = this->_pos.x;
+	this->_previous.y = this->_pos.y;
 	this->set_position(tmp);
 }
 

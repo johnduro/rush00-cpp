@@ -6,7 +6,7 @@
 //   By: mdrissi <mdrissi@student.42.fr>            +#+  +:+       +#+        //
 //                                                +#+#+#+#+#+   +#+           //
 //   Created: 2015/01/10 18:47:49 by mdrissi           #+#    #+#             //
-//   Updated: 2015/01/11 03:45:48 by mle-roy          ###   ########.fr       //
+//   Updated: 2015/01/11 06:13:46 by mle-roy          ###   ########.fr       //
 //                                                                            //
 // ************************************************************************** //
 
@@ -19,7 +19,7 @@ Tir::Tir( void )
 }
 
 Tir::Tir(coord pos, int dir, char typetir, int maxY, int maxX)
-	: GameEntity(1, pos, 0, 1, maxY, maxX, dir), _typetir(typetir)
+	: GameEntity(1, pos, typetir, 1, maxY, maxX, dir), _typetir(typetir)
 {
 	this->_planNextPlay();
 	this->move(dir, maxY, maxX);

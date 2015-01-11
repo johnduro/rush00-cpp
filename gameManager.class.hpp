@@ -6,7 +6,7 @@
 //   By: mle-roy <mle-roy@student.42.fr>            +#+  +:+       +#+        //
 //                                                +#+#+#+#+#+   +#+           //
 //   Created: 2015/01/10 16:05:24 by mle-roy           #+#    #+#             //
-//   Updated: 2015/01/11 04:51:23 by mdrissi          ###   ########.fr       //
+//   Updated: 2015/01/11 06:33:43 by mle-roy          ###   ########.fr       //
 //                                                                            //
 // ************************************************************************** //
 
@@ -15,6 +15,7 @@
 
 #include <ncurses.h>
 #include <sys/time.h>
+#include <fstream>
 #include "defines.hpp"
 #include "gameEntity.class.hpp"
 #include "Player.hpp"
@@ -44,6 +45,8 @@ class gameManager
 private :
 	// ** PRIVATE ATTRIBUTES ** //
 	static int const	_scoreSize = 3;
+	static int const	_maxEnnemy = 20;
+	static int const	_maxTir = 50;
 	bool				_isInit;
 	t_list				*_entities;
 	Player				*_player;
@@ -52,6 +55,9 @@ private :
 	WINDOW				*_field;
 	WINDOW				*_score;
 	struct timeval		_nextGen;
+	int					_ennemy;
+	int					_tir;
+	// std::ofstream		myOut;
 //	struct timeval		_nextPrint;
 
 	// ** PRIVATE FUNCTION ** //
